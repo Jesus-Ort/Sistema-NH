@@ -2,16 +2,16 @@
     <v-container class="d-flex justify-center align-center">
         <v-form class="pa-4 w-50 w-auto" >
 
-            <h2 class="text-center text-h4 text-no-wrap mb-4 w-full">Registro De Usuarios</h2>
+            <h2 class="text-center text-h4 mb-4 w-full">Registro De Usuarios</h2>
 
-            <p class="text-center mb-4">Porfavor ingresa tus credenciales para registrarte.</p>
+            <p class="text-center mb-4">Porfavor ingresa los datos para el registro.</p>
 
             <!-- Username -->
             <v-text-field
                 class="mt-4"
                 v-model="username"
                 clearable
-                label="Username"
+                label="Nombre de Usuario"
                 required
                 color="primary"
                 :error-messages="usernameError"
@@ -23,7 +23,7 @@
                 class="mt-4"
                 v-model="password"
                 clearable
-                label="Password"
+                label="Contraseña"
                 type="password"
                 color="primary"
                 required

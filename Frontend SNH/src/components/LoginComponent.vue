@@ -10,7 +10,7 @@
                 class="mt-4"
                 v-model="username"
                 clearable
-                label="Username"
+                label="Nombre de Usuario"
                 required
                 color="primary"
                 :error-messages="usernameError"
@@ -21,7 +21,7 @@
                 class="mt-4"
                 v-model="password"
                 clearable
-                label="Password"
+                label="Contraseña"
                 type="password"
                 color="primary"
                 required

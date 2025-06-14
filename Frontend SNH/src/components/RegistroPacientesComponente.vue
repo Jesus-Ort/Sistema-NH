@@ -1,10 +1,10 @@
 <template>
     <v-container class="d-flex justify-center align-center">
         <v-form class="pa-4 w-50 w-auto" >
+            
+            <h2 class="text-center text-h4 mb-4 w-full">Registro De Pacientes</h2>
 
-            <h2 class="text-center text-h4 text-no-wrap mb-4 w-full">Registro De Pacientes</h2>
-
-            <p class="text-center mb-4">Porfavor ingresa tus credenciales para registrarte.</p>
+            <p class="text-center mb-4">Porfavor ingresa los datos para el registro.</p>
 
             <!-- Cedula de Identidad -->
             <v-text-field
