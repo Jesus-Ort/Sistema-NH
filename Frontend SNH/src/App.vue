@@ -7,6 +7,7 @@
     <RegistroPacientesComponente/>
     <RegistroPais/>
     <RegistroAreaSalud/>
+    <RegistroFabricantes/>
   </header>
 
   <RouterView />
@@ -19,6 +20,7 @@ import RegistroUsuariosComponent from './components/RegistroUsuariosComponent.vu
 import RegistroPacientesComponente from './components/RegistroPacientesComponente.vue';
 import RegistroPais from './components/RegistroPais.vue';
 import RegistroAreaSalud from './components/RegistroAreaSalud.vue';
+import RegistroFabricantes from './components/RegistroFabricantes.vue';
 </script>
 
 

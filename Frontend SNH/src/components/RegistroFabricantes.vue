@@ -1,0 +1,62 @@
+<template>
+    <v-container class="d-flex justify-center align-center">
+        <v-form class="pa-4 w-50 w-auto" >
+
+            <h2 class="text-center text-h4 mb-4 w-full">Fabricantes</h2>
+
+            <p class="text-center mb-4">Porfavor ingresa el fabricante de la vacuna.</p>
+
+            <!-- Fabricante -->
+            <v-text-field
+                class="mt-4"
+                v-model="manufacturer"
+                clearable
+                label="Fabricante"
+                required
+                color="primary"
+                :error-messages="manufacturerError"
+                prepend-icon="mdi-factory"
+            ></v-text-field>
+
+            <!-- País -->
+            <v-select
+                class="mt-4"
+                v-model="country"
+                :items="['Centro de Salud 1', 'Centro de Salud 2', 'Centro de Salud 3']"
+                label="País"
+                color="primary"
+                required
+                :error-messages="countryError"
+                prepend-icon="mdi-earth">
+            </v-select>
+
+            <div class="d-flex justify-end mt-4">
+
+                <v-btn @click="registro()" block color="success">Registrar</v-btn>
+
+            </div>
+
+        </v-form>
+    </v-container>
+</template>
+
+<script setup>
+import { useForm, useField } from 'vee-validate'
+import * as yup from 'yup'
+
+
+const { handleSubmit } = useForm({
+    validationSchema: yup.object({
+        manufacturer: yup.string().required('El fabricante es requerido').min(3,"Debe contener minimo 3 letras"),
+        country: yup.string().required('El país es requerido').min(3,"Debe contener minimo 3 letras"),
+    })
+}); 
+
+const {value: manufacturer, errorMessage: manufacturerError} = useField("manufacturer")
+const {value: country, errorMessage: countryError} = useField("country")
+
+const registro = handleSubmit((values) => {
+    console.log('Formulario enviado con los siguientes datos:', values);
+}); 
+
+</script>
