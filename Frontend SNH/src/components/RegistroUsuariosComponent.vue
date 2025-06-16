@@ -68,8 +68,9 @@
                 prepend-icon="mdi-account-cog">
             </v-select>
 
+            <!-- Buscado por nombre, agregado como array, devolver ID  -->
             <!-- Centro de Salud -->
-            <v-select
+            <v-autocomplete
                 class="mt-4"
                 v-model="healthCenter"
                 :items="['Centro de Salud 1', 'Centro de Salud 2', 'Centro de Salud 3']"
@@ -78,7 +79,7 @@
                 required
                 :error-messages="healthCenterError"
                 prepend-icon="mdi-hospital-building">
-            </v-select>
+            </v-autocomplete>
 
             <div class="d-flex justify-end mt-4">
 

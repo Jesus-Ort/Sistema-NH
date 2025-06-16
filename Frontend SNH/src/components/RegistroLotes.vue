@@ -1,0 +1,122 @@
+<template>
+    <v-container class="d-flex justify-center align-center">
+        <v-form class="pa-4 w-50 w-auto" >
+
+            <h2 class="text-center text-h4 mb-4 w-full">Lotes de Vacunas</h2>
+
+            <p class="text-center mb-4">Porfavor ingresa los datos del lote.</p>
+
+            <!-- Buscado por nombre, agregado como array, devolver ID  -->
+            <!-- Vacuna -->
+            <v-autocomplete
+                class="mt-4"
+                v-model="vaccine"
+                :items="['Vacuna 1', 'Vacuna 2', 'Vacuna 3']"
+                label="Vacuna"
+                color="primary"
+                required
+                :error-messages="vaccineError"
+                prepend-icon="mdi-needle">
+            </v-autocomplete>
+
+            <!-- Numero del lote -->
+            <v-text-field
+                class="mt-4"
+                v-model="batchNumber"
+                clearable
+                label="Numero del Lote"
+                required
+                color="primary"
+                :error-messages="batchNumberError"
+                prepend-icon="mdi-package"
+            ></v-text-field>
+
+            <!--  Fecha de fabricación del lote -->
+            <v-text-field
+                class="mt-4"
+                v-model="manufactureDate"
+                clearable
+                label="Fecha de fabricación del lote"
+                type="date"
+                color="primary"
+                required
+                :error-messages="manufactureDateError"
+                prepend-icon="mdi-calendar">
+            </v-text-field>
+
+            <!--  Fecha de vencimiento del lote  -->
+            <v-text-field
+                class="mt-4"
+                v-model="expirationDate"
+                clearable
+                label="Fecha de vencimiento del lote "
+                type="date"
+                color="primary"
+                required
+                :error-messages="expirationDateError"
+                prepend-icon="mdi-calendar">
+            </v-text-field>
+
+            <!-- Cantidad de viales en este lote inicialmente -->
+            <v-number-input 
+                class="mt-4"
+                v-model="initialQuantity"
+                clearable
+                label="Cantidad de viales en este lote inicialmente"
+                required
+                color="primary"
+                :error-messages="initialQuantityError"
+                prepend-icon="mdi-asterisk"
+                control-variant="hidden"
+            ></v-number-input>
+
+            <!-- Cantidad de viales aún disponibles en este lote -->
+            <v-number-input 
+                class="mt-4"
+                v-model="availableQuantity"
+                clearable
+                label="Cantidad de viales aún disponibles en este lote"
+                required
+                color="primary"
+                :error-messages="availableQuantityError"
+                prepend-icon="mdi-asterisk"
+                control-variant="hidden"
+            ></v-number-input>
+
+            <div class="d-flex justify-end mt-4">
+
+                <v-btn @click="registro()" block color="success">Registrar</v-btn>
+
+            </div>
+
+        </v-form>
+    </v-container>
+</template>
+
+<script setup>
+import { useForm, useField } from 'vee-validate'
+import * as yup from 'yup'
+
+
+const { handleSubmit } = useForm({
+    validationSchema: yup.object({
+        vaccine: yup.string().required('La vacuna es requerida').min(3,"Debe contener minimo 3 letras"),
+        batchNumber: yup.number().required('El número del lote es obligatorio').min(1, "Debe ser al menos 1"),
+        manufactureDate: yup.date().required('La fecha de fabricación es obligatoria').max(new Date(), 'La fecha de fabricación no puede ser futura'),
+        expirationDate: yup.date().required('La fecha de vencimiento es obligatoria').min(new Date(), 'La fecha de vencimiento no puede ser pasada'),
+        initialQuantity: yup.number().required('La cantidad inicial es obligatoria').min(1,"Debe ser al menos 1"),
+        availableQuantity: yup.number().required('La cantidad disponible es obligatoria').min(1,"Debe ser al menos 1")
+    })
+}); 
+const {value: vaccine, errorMessage: vaccineError} = useField("vaccine")
+const {value: batchNumber, errorMessage: batchNumberError} = useField("batchNumber")
+const {value: manufactureDate, errorMessage: manufactureDateError} = useField("manufactureDate")
+const {value: expirationDate, errorMessage: expirationDateError} = useField("expirationDate")
+const {value: initialQuantity, errorMessage: initialQuantityError} = useField("initialQuantity")
+const {value: availableQuantity, errorMessage: availableQuantityError} = useField("availableQuantity")
+
+const registro = handleSubmit((values) => {
+    console.log('Formulario enviado con los siguientes datos:', values);
+}); 
+
+</script>

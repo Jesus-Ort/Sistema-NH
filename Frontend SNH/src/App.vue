@@ -8,6 +8,9 @@
     <RegistroPais/>
     <RegistroAreaSalud/>
     <RegistroFabricantes/>
+    <RegistroVacunas/>
+    <RegistroLotes/>
+    <RegistroDosis/>
   </header>
 
   <RouterView />
@@ -21,6 +24,9 @@ import RegistroPacientesComponente from './components/RegistroPacientesComponent
 import RegistroPais from './components/RegistroPais.vue';
 import RegistroAreaSalud from './components/RegistroAreaSalud.vue';
 import RegistroFabricantes from './components/RegistroFabricantes.vue';
+import RegistroVacunas from './components/RegistroVacunas.vue';
+import RegistroLotes from './components/RegistroLotes.vue'
+import RegistroDosis from './components/RegistroDosis.vue';
 </script>
 
 

@@ -18,17 +18,19 @@
                 prepend-icon="mdi-factory"
             ></v-text-field>
 
+
+            <!-- Buscado por nombre, agregado como array, devolver ID  -->
             <!-- País -->
-            <v-select
+            <v-autocomplete
                 class="mt-4"
                 v-model="country"
-                :items="['Centro de Salud 1', 'Centro de Salud 2', 'Centro de Salud 3']"
+                :items="['País 1', 'País 2', 'País 3']"
                 label="País"
                 color="primary"
                 required
                 :error-messages="countryError"
                 prepend-icon="mdi-earth">
-            </v-select>
+            </v-autocomplete>
 
             <div class="d-flex justify-end mt-4">
 
