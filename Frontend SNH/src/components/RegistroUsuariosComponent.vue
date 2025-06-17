@@ -56,17 +56,18 @@
                 prepend-icon="mdi-account-box">
             </v-text-field>
 
+            <!-- Buscado por nombre, agregado como array, devolver ID  -->
             <!-- Rol -->
-            <v-select
+            <v-autocomplete
                 class="mt-4"
                 v-model="role"
-                :items="['Admin', 'User']"
+                :items="['Rol 1', 'Rol 2', 'Rol 3']"
                 label="Rol"
                 color="primary"
                 required
                 :error-messages="roleError"
                 prepend-icon="mdi-account-cog">
-            </v-select>
+            </v-autocomplete>
 
             <!-- Buscado por nombre, agregado como array, devolver ID  -->
             <!-- Centro de Salud -->
@@ -101,7 +102,7 @@ const { handleSubmit } = useForm({
         username: yup.string().required('El nombre de usuario es requerido').min(3,"Debe contener minimo 3 letras"),
         password: yup.string().required('La contraseña es requerida').min(6,"Debe contener minimo 6 letras"),
         email: yup.string().matches(/^[\w-.]+@(gmail\.com|outlook\.com|yahoo\.com|hotmail\.com)$/, 'Solo se permiten correos de Gmail, Outlook, Yahoo o Hotmail').required('El correo electrónico es requerido'),
-        fullName: yup.string().required('El nombre completo es requerido').min(3, "Debe contener minimo 3 letras"),
+        fullName: yup.string().required('El nombre completo es requerido').min(3, "Debe contener minimo 3 letras").matches(/^[a-zA-Z ]*$/, "Deben ser letras"),
         role: yup.string().required('El rol es requerido'),
         healthCenter: yup.string().required('El centro de salud es requerido'),
     })

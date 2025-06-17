@@ -71,18 +71,17 @@
                 prepend-icon="mdi-hospital-building">
             </v-autocomplete>
 
-            <!-- Buscado por nombre, agregado como array, devolver ID  -->
             <!-- Nombre del profesional de salud que aplicó la dosis -->
-            <v-autocomplete
+            <v-text-field
                 class="mt-4"
                 v-model="healthProfessional"
-                :items="['Personal 1', 'Personal 2', 'Personal 3']"
+                clearable
                 label="Nombre de quién aplicó la dosis"
-                color="primary"
                 required
+                color="primary"
                 :error-messages="healthProfessionalError"
-                prepend-icon="mdi-stethoscope">
-            </v-autocomplete>
+                prepend-icon="mdi-stethoscope"
+            ></v-text-field>
 
             <!-- Observaciones -->
             <v-text-field
@@ -118,7 +117,7 @@ const { handleSubmit } = useForm({
         doseNumber: yup.number().required("El número de la dosis aplicada es requerido").min(1,"Debe ser al menos 1 dosis"),
         aplicationDate: yup.date().required("La fecha de aplicacion es requerida").max(new Date(), 'La fecha de aplicacion no puede ser futura'),
         center: yup.string().required("El centro de salud es requerido").min(3,"Debe contener minimo 3 letras"),
-        healthProfessional: yup.string().required("El Profesional de Salud es requerido").min(3,"Debe contener minimo 3 letras"),
+        healthProfessional: yup.string().required("El Profesional de Salud es requerido").min(3,"Debe contener minimo 3 letras").matches(/^[a-zA-Z ]*$/, "Deben ser letras"),
         observaciones: yup.string().max(1000,"Máximo 1000 letras")
     })
 }); 
