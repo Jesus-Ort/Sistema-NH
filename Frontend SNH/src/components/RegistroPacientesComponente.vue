@@ -12,7 +12,7 @@
                 v-model="nationalID"
                 clearable
                 label="Cedula de Identidad"
-                color="primary"
+                color="text"
                 required
                 :error-messages="cedulaError"
                 prepend-icon="mdi-card"
@@ -24,7 +24,7 @@
                 v-model="firstName"
                 clearable
                 label="Nombre"
-                color="primary"
+                color="text"
                 required
                 :error-messages="firstNameError"
                 prepend-icon="mdi-account">
@@ -36,7 +36,7 @@
                 v-model="lastName"
                 clearable
                 label="Apellido"
-                color="primary"
+                color="text"
                 required
                 :error-messages="lastNameError"
                 prepend-icon="mdi-account-box">
@@ -49,7 +49,7 @@
                 clearable
                 label="Fecha de Nacimiento"
                 type="date"
-                color="primary"
+                color="text"
                 required
                 :error-messages="birthDateError"
                 prepend-icon="mdi-calendar">
@@ -61,7 +61,7 @@
                 v-model="gender"
                 :items="['M', 'F', 'O']"
                 label="Género"
-                color="primary"
+                color="text"
                 required
                 :error-messages="genderError"
                 prepend-icon="mdi-gender-male-female">
@@ -73,7 +73,7 @@
                 v-model="address"
                 clearable
                 label="Dirección"
-                color="primary"
+                color="text"
                 required
                 :error-messages="addressError"
                 prepend-icon="mdi-home">
@@ -85,7 +85,7 @@
                 v-model="phone"
                 clearable
                 label="Teléfono"
-                color="primary"
+                color="text"
                 required
                 :error-messages="phoneError"
                 prepend-icon="mdi-phone">
@@ -98,7 +98,7 @@
                 clearable
                 label="Email"
                 type="email"
-                color="primary"
+                color="text"
                 required
                 :error-messages="emailError"
                 prepend-icon="mdi-email">

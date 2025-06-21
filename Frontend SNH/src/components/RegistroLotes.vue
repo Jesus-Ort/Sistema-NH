@@ -13,7 +13,7 @@
                 v-model="vaccine"
                 :items="['Vacuna 1', 'Vacuna 2', 'Vacuna 3']"
                 label="Vacuna"
-                color="primary"
+                color="text"
                 required
                 :error-messages="vaccineError"
                 prepend-icon="mdi-needle">
@@ -26,7 +26,7 @@
                 clearable
                 label="Numero del Lote"
                 required
-                color="primary"
+                color="text"
                 :error-messages="batchNumberError"
                 prepend-icon="mdi-package"
             ></v-text-field>
@@ -38,7 +38,7 @@
                 clearable
                 label="Fecha de fabricación del lote"
                 type="date"
-                color="primary"
+                color="text"
                 required
                 :error-messages="manufactureDateError"
                 prepend-icon="mdi-calendar">
@@ -51,7 +51,7 @@
                 clearable
                 label="Fecha de vencimiento del lote "
                 type="date"
-                color="primary"
+                color="text"
                 required
                 :error-messages="expirationDateError"
                 prepend-icon="mdi-calendar">
@@ -64,7 +64,7 @@
                 clearable
                 label="Cantidad de viales en este lote inicialmente"
                 required
-                color="primary"
+                color="text"
                 :error-messages="initialQuantityError"
                 prepend-icon="mdi-asterisk"
                 control-variant="hidden"
@@ -77,7 +77,7 @@
                 clearable
                 label="Cantidad de viales aún disponibles en este lote"
                 required
-                color="primary"
+                color="text"
                 :error-messages="availableQuantityError"
                 prepend-icon="mdi-asterisk"
                 control-variant="hidden"

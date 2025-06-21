@@ -13,7 +13,7 @@
                 clearable
                 label="Nombre de la vacuna"
                 required
-                color="primary"
+                color="text"
                 :error-messages="nameError"
                 prepend-icon="mdi-needle"
             ></v-text-field>
@@ -26,7 +26,7 @@
                 v-model="manufacturer"
                 :items="['Fabricante 1', 'Fabricante 2', 'Fabricante 3']"
                 label="Fabricante"
-                color="primary"
+                color="text"
                 required
                 :error-messages="manufacturerError"
                 prepend-icon="mdi-factory">
@@ -39,7 +39,7 @@
                 clearable
                 label="Dosis requerida para la inmunización"
                 required
-                color="primary"
+                color="text"
                 :error-messages="requiredDosesError"
                 prepend-icon="mdi-check"
                 control-variant="hidden"
@@ -52,7 +52,7 @@
                 clearable
                 label="Intervalo recomendado entre dosis en días"
                 required
-                color="primary"
+                color="text"
                 :error-messages="intervalDosesError"
                 prepend-icon="mdi-calendar-range"
                 control-variant="hidden"
@@ -65,7 +65,7 @@
                 clearable
                 label="Requisitos de temperatura de almacenamiento"
                 required
-                color="primary"
+                color="text"
                 :error-messages="temperatureError"
                 prepend-icon="mdi-thermometer"
             ></v-text-field>

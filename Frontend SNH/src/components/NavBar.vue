@@ -2,7 +2,7 @@
     <v-app-bar color="primary" dark app>
     <!-- Izquierda: Drawer -->
     <div class="d-flex align-center">
-        <v-app-bar-nav-icon @click="$emit('toggle-drawer')" />
+        <v-app-bar-nav-icon class="ma-1" @click="$emit('toggle-drawer')" />
     </div>
     <v-divider vertical></v-divider>
     <!-- Spacer para empujar el logo al centro -->

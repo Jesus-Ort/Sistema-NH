@@ -13,7 +13,7 @@
                 clearable
                 label="Nombre de Usuario"
                 required
-                color="primary"
+                color="text"
                 :error-messages="usernameError"
                 prepend-icon="mdi-account"
             ></v-text-field>
@@ -25,7 +25,7 @@
                 clearable
                 label="Contraseña"
                 type="password"
-                color="primary"
+                color="text"
                 required
                 :error-messages="passwordError"
                 prepend-icon="mdi-lock"
@@ -38,7 +38,7 @@
                 clearable
                 label="Email"
                 type="email"
-                color="primary"
+                color="text"
                 required
                 :error-messages="emailError"
                 prepend-icon="mdi-email">
@@ -50,7 +50,7 @@
                 v-model="fullName"
                 clearable
                 label="Nombre Completo"
-                color="primary"
+                color="text"
                 required
                 :error-messages="fullNameError"
                 prepend-icon="mdi-account-box">
@@ -63,7 +63,7 @@
                 v-model="role"
                 :items="['Rol 1', 'Rol 2', 'Rol 3']"
                 label="Rol"
-                color="primary"
+                color="text"
                 required
                 :error-messages="roleError"
                 prepend-icon="mdi-account-cog">
@@ -76,7 +76,7 @@
                 v-model="healthCenter"
                 :items="['Centro de Salud 1', 'Centro de Salud 2', 'Centro de Salud 3']"
                 label="Centro de Salud"
-                color="primary"
+                color="text"
                 required
                 :error-messages="healthCenterError"
                 prepend-icon="mdi-hospital-building">

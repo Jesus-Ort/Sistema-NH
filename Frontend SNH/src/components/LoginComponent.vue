@@ -12,7 +12,7 @@
                 clearable
                 label="Nombre de Usuario"
                 required
-                color="primary"
+                color="text"
                 :error-messages="usernameError"
                 prepend-icon="mdi-account"
             ></v-text-field>
@@ -23,7 +23,7 @@
                 clearable
                 label="Contraseña"
                 type="password"
-                color="primary"
+                color="text"
                 required
                 :error-messages="passwordError"
                 prepend-icon="mdi-lock"

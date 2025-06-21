@@ -13,7 +13,7 @@
                 clearable
                 label="Fabricante"
                 required
-                color="primary"
+                color="text"
                 :error-messages="manufacturerError"
                 prepend-icon="mdi-factory"
             ></v-text-field>
@@ -26,7 +26,7 @@
                 v-model="country"
                 :items="['País 1', 'País 2', 'País 3']"
                 label="País"
-                color="primary"
+                color="text"
                 required
                 :error-messages="countryError"
                 prepend-icon="mdi-earth">

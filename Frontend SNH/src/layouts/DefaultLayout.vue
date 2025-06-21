@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <NavBar @toggle-drawer="drawer = !drawer" />
+    <NavBar @toggle-drawer="drawer = !drawer"/>
 
     <v-navigation-drawer v-model="drawer" app temporary>
       <v-list nav>
@@ -17,7 +17,7 @@
     </v-navigation-drawer>
 
     <v-main class="pa-4 mt-15">
-      <router-view />
+      <router-view/>
     </v-main>
   </v-app>
 </template>

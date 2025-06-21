@@ -13,7 +13,7 @@
                 clearable
                 label="País"
                 required
-                color="primary"
+                color="text"
                 :error-messages="countryError"
                 prepend-icon="mdi-earth"
             ></v-text-field>

@@ -13,7 +13,7 @@
                 v-model="paciente"
                 :items="['Paciente 1', 'Paciente 2', 'Paciente 3']"
                 label="C.I del Paciente"
-                color="primary"
+                color="text"
                 required
                 :error-messages="pacienteError"
                 prepend-icon="mdi-human">
@@ -26,7 +26,7 @@
                 v-model="lote"
                 :items="['Lote 1', 'Lote 2', 'Lote 3']"
                 label="Numero del Lote"
-                color="primary"
+                color="text"
                 required
                 :error-messages="loteError"
                 prepend-icon="mdi-package">
@@ -39,7 +39,7 @@
                 clearable
                 label=" Número de la dosis"
                 required
-                color="primary"
+                color="text"
                 :error-messages="doseNumberError"
                 prepend-icon="mdi-needle"
                 control-variant="hidden"
@@ -52,7 +52,7 @@
                 clearable
                 label="Fecha de aplicacion de la dosis"
                 type="date"
-                color="primary"
+                color="text"
                 required
                 :error-messages="aplicationDateError"
                 prepend-icon="mdi-calendar">
@@ -65,7 +65,7 @@
                 v-model="center"
                 :items="['Centro de Salud 1', 'Centro de Salud 2', 'Centro de Salud 3']"
                 label="Centro de Salud"
-                color="primary"
+                color="text"
                 required
                 :error-messages="centerError"
                 prepend-icon="mdi-hospital-building">
@@ -78,7 +78,7 @@
                 clearable
                 label="Nombre de quién aplicó la dosis"
                 required
-                color="primary"
+                color="text"
                 :error-messages="healthProfessionalError"
                 prepend-icon="mdi-stethoscope"
             ></v-text-field>
@@ -90,7 +90,7 @@
                 clearable
                 label="Observaciones"
                 required
-                color="primary"
+                color="text"
                 :error-messages="observacionesError"
                 prepend-icon="mdi-eye"
             ></v-text-field>

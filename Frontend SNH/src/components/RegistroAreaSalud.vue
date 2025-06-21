@@ -13,7 +13,7 @@
                 clearable
                 label="Nombre del Centro de Salud"
                 required
-                color="primary"
+                color="text"
                 :error-messages="centerNameError"
                 prepend-icon="mdi-hospital-building"
             ></v-text-field>
@@ -25,7 +25,7 @@
                 clearable
                 label="Dirección del Centro de Salud"
                 required
-                color="primary"
+                color="text"
                 :error-messages="centerAdressError"
                 prepend-icon="mdi-directions"
             ></v-text-field>
@@ -37,7 +37,7 @@
                 clearable
                 label="Teléfono del Centro de Salud"
                 required
-                color="primary"
+                color="text"
                 :error-messages="centerPhoneError"
                 prepend-icon="mdi-phone"
             ></v-text-field>
@@ -49,7 +49,7 @@
                 clearable
                 label="Email del Centro de Salud"
                 required
-                color="primary"
+                color="text"
                 :error-messages="centerEmailError"
                 prepend-icon="mdi-email"
             ></v-text-field>
