@@ -118,6 +118,14 @@
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 
+const props = defineProps({
+    multistep: {
+    type: Boolean,
+    default: false
+    }
+})
+
+const emit = defineEmits(['next'])
 
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
@@ -144,6 +152,9 @@ const { value: email, errorMessage: emailError } = useField("email");
 
 const registro = handleSubmit((values) => {
     console.log('Formulario enviado con los siguientes datos:', values);
+    if (props.multistep) {
+        emit('next')
+    }
 }); 
 
 </script>
