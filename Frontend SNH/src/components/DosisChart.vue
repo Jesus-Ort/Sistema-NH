@@ -44,7 +44,7 @@ asegurándose de tener configurado el tema y las dependencias necesarias.
                     :items="['Día', 'Semana', 'Mes']"
                     label="Filtro"
                     class="mb-4"
-                    :color="isDark ? 'secondary' : 'primary'"
+                    :color="isDark ? 'text' : 'text'"
                     :theme="isDark ? 'SNHdark' : 'SNH'"
                     :style="{ color: isDark ? '#fff' : '#222', borderRadius: '8px' }"
                 />

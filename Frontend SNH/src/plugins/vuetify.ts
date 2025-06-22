@@ -24,10 +24,10 @@ export default createVuetify({
                     primary: '#1B856E',      
                     secondary: '#012F21',    
                     accent: '#20cfa2',      
-                    error: '#e57373',        
+                    error: '#FC3E30',        
                     info: '#2196f3',         
                     success: '#43A148',      
-                    warning: '#ffb300',
+                    warning: '#FFC800',
                     text:'1B856E'      
                 }
             },
@@ -37,10 +37,10 @@ export default createVuetify({
                     primary: '#1F453D',       
                     secondary: '#A3EFDE',    
                     accent: '#3B7A6A',       
-                    error: '#ef9a9a',        
+                    error: '#C73126',        
                     info: '#90caf9',         
                     success: '#2A502C',      
-                    warning: '#ffe082',
+                    warning: '#F0BC00',
                     text:'50BF56'     
                 }
             }

@@ -41,6 +41,8 @@ Dependencias:
             label="Buscar vacuna, paciente, centro, fecha, etc."
             prepend-inner-icon="mdi-magnify"
             clearable
+            :color="isDark ? 'text' : 'text'"
+            :theme="isDark ? 'SNHdark' : 'SNH'"
             class="mb-4"
         />
 
@@ -50,15 +52,16 @@ Dependencias:
         :loading="loading"
         loading-text="Cargando vacunas..."
         class="elevation-1"
+        :items-per-page-text="'Ítems por páginas'"
         :style="{ background: isDark ? '#23272f' : '#eee', borderRadius: '16px', padding: '32px' }"
         >
 
         <template #item.acciones="{ item }">
-            <v-btn icon color="info" @click="abrirModal(item)">
-            <v-icon>mdi-pencil</v-icon>
+            <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
+            <v-icon class="text-white">mdi-pencil</v-icon>
             </v-btn>
-            <v-btn icon color="error" @click="borrarVacuna(item.id)">
-            <v-icon>mdi-delete</v-icon>
+            <v-btn icon color="error" class="mb-1 mt-1" @click="borrarVacuna(item.id)">
+            <v-icon class="text-white">mdi-delete</v-icon>
             </v-btn>
         </template>
         </v-data-table>
