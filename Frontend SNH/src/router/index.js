@@ -12,8 +12,13 @@ import RegistroRoles from '@/components/RegistroRoles.vue'
 import RegistroUsuarios from '@/components/RegistroUsuarios.vue'
 import RegistroVacunas from '@/components/RegistroVacunas.vue'
 import DosisAplicadaPage from '@/pages/DosisAplicadaPage.vue'
+import LoginComponent from '@/components/LoginComponent.vue'
 
 const routes = [
+  {
+    path: '/login',
+    component:LoginComponent
+  },
   {
     path: '/',
     component: DefaultLayout,

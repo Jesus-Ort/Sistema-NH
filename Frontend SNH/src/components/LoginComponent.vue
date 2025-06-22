@@ -1,5 +1,5 @@
 <template>
-    <v-container class="d-flex justify-center align-center">
+    <v-container class="d-flex justify-center align-center" style="height: 100vh">
         <v-form class="pa-4 w-50 w-auto" >
 
             <h2 class="text-center text-h4 mb-4">Login</h2>
@@ -44,20 +44,32 @@
 <script setup>
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 
+// Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        username: yup.string().required('El nombre de usuario es requerido').min(3,"Debe contener minimo 3 letras"),
+        username: yup.string().required('El nombre de usuario es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z0-9]+$/,"Solo numeros y letras sin caracteres especiales"),
         password: yup.string().required('La contraseña es requerida').min(6,"Debe contener minimo 6 letras")
     })
 }); 
 
+// Manejo de errores
 const {value: username, errorMessage: usernameError} = useField("username")
 const {value: password, errorMessage: passwordError} = useField("password")
 
+// Envio
 const login = handleSubmit((values) => {
+    // Funcionalidad backend
     console.log('Formulario enviado con los siguientes datos:', values);
+
+    router.push('/')  
 }); 
+
+
+
+
 
 </script>

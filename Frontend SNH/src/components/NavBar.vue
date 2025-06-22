@@ -48,11 +48,9 @@
     <!-- Derecha: Iconos -->
     <div class="d-flex align-center">
         <v-divider vertical></v-divider>
-        <!-- <v-btn class="ma-1" icon to="/dosis-aplicada">
-            <v-icon>mdi-needle</v-icon>
-        </v-btn> -->
-        <v-divider vertical></v-divider>
         <darkMode class="ma-1"/>
+        <v-divider vertical></v-divider>
+        <logOut class="ma-1"></logOut>
         </div>
     </v-app-bar>
 </template>
@@ -60,4 +58,5 @@
 <script setup>
 import Logo from "@/assets/logo.svg";
 import darkMode from "@/components/DarkModeToggle.vue"
+import logOut from "@/components/LogoutButton.vue"
 </script>
