@@ -118,6 +118,7 @@
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 
+// Propiedad para formulario en pasos (si es necesaria)
 const props = defineProps({
     multistep: {
     type: Boolean,
@@ -127,6 +128,7 @@ const props = defineProps({
 
 const emit = defineEmits(['next'])
 
+// Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
         nationalID: yup.string().required('La cédula de identidad es requerida').matches(/^\d{6,9}$/, 'Debe contener entre 6 y 9 dígitos numéricos, sin letras ni caracteres especiales'),
@@ -140,6 +142,7 @@ const { handleSubmit } = useForm({
     })
 }); 
 
+// Manejo de errores
 const { value: nationalID, errorMessage: cedulaError } = useField("nationalID");
 const { value: firstName, errorMessage: firstNameError } = useField("firstName");
 const { value: lastName, errorMessage: lastNameError } = useField("lastName");
@@ -149,7 +152,7 @@ const { value: address, errorMessage: addressError } = useField("address");
 const { value: phone, errorMessage: phoneError } = useField("phone");
 const { value: email, errorMessage: emailError } = useField("email");
 
-
+// Envio
 const registro = handleSubmit((values) => {
     // Funcionalidad backend
     console.log('Formulario enviado con los siguientes datos:', values);

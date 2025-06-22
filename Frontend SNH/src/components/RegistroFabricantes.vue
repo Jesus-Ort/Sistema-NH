@@ -46,6 +46,7 @@
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 
+// Propiedad para formulario en pasos (si es necesaria)
 const props = defineProps({
     multistep: {
     type: Boolean,
@@ -55,6 +56,7 @@ const props = defineProps({
 
 const emit = defineEmits(['next'])
 
+// Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
         manufacturer: yup.string().required('El fabricante es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
@@ -62,9 +64,11 @@ const { handleSubmit } = useForm({
     })
 }); 
 
+// Manejo de errores
 const {value: manufacturer, errorMessage: manufacturerError} = useField("manufacturer")
 const {value: country, errorMessage: countryError} = useField("country")
 
+// Envio
 const registro = handleSubmit((values) => {
     // Funcionalidad backend
     console.log('Formulario enviado con los siguientes datos:', values);

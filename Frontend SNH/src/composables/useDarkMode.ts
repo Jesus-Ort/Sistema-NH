@@ -1,6 +1,17 @@
 import { computed, onMounted } from 'vue'
 import { useTheme } from 'vuetify'
 
+/**
+ * Composable para gestionar el modo oscuro en la aplicación.
+ *
+ * Esta función proporciona una propiedad computada reactiva `isDark` para determinar si el tema actual es oscuro,
+ * y una función `toggleDark` para alternar entre los temas claro y oscuro. El tema seleccionado se guarda
+ * en `localStorage` y se inicializa al montar, ya sea desde el almacenamiento o detectando la preferencia del sistema operativo del usuario.
+ *
+ * return Un objeto que contiene:
+ * - `isDark`: Un booleano computado que indica si el tema oscuro está activo.
+ * - `toggleDark`: Una función para alternar entre los temas claro y oscuro.
+ */
 export function useDarkMode() {
     const theme = useTheme()
     const isDark = computed(() => theme.global.name.value === 'SNHdark')

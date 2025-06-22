@@ -97,6 +97,7 @@
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 
+// Propiedad para formulario en pasos (si es necesaria)
 const props = defineProps({
     multistep: {
     type: Boolean,
@@ -106,6 +107,7 @@ const props = defineProps({
 
 const emit = defineEmits(['next'])
 
+// Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
         vaccine: yup.string().required('La vacuna es requerida').min(3,"Debe contener minimo 3 letras"),
@@ -116,6 +118,8 @@ const { handleSubmit } = useForm({
         availableQuantity: yup.number().required('La cantidad disponible es obligatoria').min(1,"Debe ser al menos 1")
     })
 }); 
+
+// Manejo de errores
 const {value: vaccine, errorMessage: vaccineError} = useField("vaccine")
 const {value: batchNumber, errorMessage: batchNumberError} = useField("batchNumber")
 const {value: manufactureDate, errorMessage: manufactureDateError} = useField("manufactureDate")
@@ -123,6 +127,7 @@ const {value: expirationDate, errorMessage: expirationDateError} = useField("exp
 const {value: initialQuantity, errorMessage: initialQuantityError} = useField("initialQuantity")
 const {value: availableQuantity, errorMessage: availableQuantityError} = useField("availableQuantity")
 
+// Envio
 const registro = handleSubmit((values) => {
     // Funcionalidad backend
     console.log('Formulario enviado con los siguientes datos:', values);

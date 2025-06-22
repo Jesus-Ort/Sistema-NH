@@ -6,6 +6,7 @@
 
             <p class="text-center mb-4">Porfavor ingresa tus credenciales para ingresar.</p>
 
+            <!-- Usuario -->
             <v-text-field
                 class="mt-4"
                 v-model="username"
@@ -17,6 +18,7 @@
                 prepend-icon="mdi-account"
             ></v-text-field>
 
+            <!-- Contraseña -->
             <v-text-field
                 class="mt-4"
                 v-model="password"

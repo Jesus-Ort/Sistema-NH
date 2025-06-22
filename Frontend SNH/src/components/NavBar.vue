@@ -1,3 +1,32 @@
+<!--
+    NavBar.vue
+
+    Este componente renderiza la barra de navegación principal de la aplicación usando v-app-bar de Vuetify.
+    Incluye:
+        - Un botón para alternar el drawer de navegación a la izquierda.
+        - Un logo centrado que enlaza a la página de inicio.
+        - Un botón para alternar el modo oscuro a la derecha.
+        - Divisores verticales para separación visual.
+        - Diseño responsivo usando utilidades flex y spacers.
+
+    Props:
+        Ninguna
+
+    Emits:
+        - 'toggle-drawer': Se emite cuando se hace clic en el icono del drawer de navegación.
+
+    Slots:
+        Ninguno
+
+    Dependencias:
+        - Componentes de Vuetify: v-app-bar, v-app-bar-nav-icon, v-divider, v-spacer, v-btn, v-icon
+        - RouterLink de vue-router para navegación
+        - Asset SVG del Logo
+        - Componente DarkModeToggle para cambiar el tema
+
+    Uso:
+        <NavBar @toggle-drawer="drawer = !drawer" />
+-->
 <template>
     <v-app-bar color="primary" dark app>
     <!-- Izquierda: Drawer -->

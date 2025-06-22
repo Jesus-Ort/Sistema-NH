@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
-import Home from '@/pages/HomePage.vue'
+import HomePage from '@/pages/HomePage.vue'
+import ReportesPage from '@/pages/ReportesPage.vue'
 import RegistroAreaSalud from '@/components/RegistroAreaSalud.vue'
 import RegistroDosis from '@/components/RegistroDosis.vue'
 import RegistroFabricantes from '@/components/RegistroFabricantes.vue'
@@ -18,7 +19,8 @@ const routes = [
     component: DefaultLayout,
     children: [
       { path: '', redirect: 'home' },
-      { path: 'home', name: 'Home', component: Home },
+      { path: 'home', name: 'Inicio', component: HomePage },
+      { path: 'reportes', name: 'Reportes', component: ReportesPage },
       { path: 'registro-area-salud', name: 'Centro de Salud', component: RegistroAreaSalud },
       { path: 'registro-dosis', name: 'Dosis', component: RegistroDosis },
       { path: 'registro-fabricantes', name: 'Fabricantes', component: RegistroFabricantes },

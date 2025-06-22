@@ -96,6 +96,7 @@
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 
+// Propiedad para formulario en pasos (si es necesaria)
 const props = defineProps({
     multistep: {
     type: Boolean,
@@ -105,6 +106,7 @@ const props = defineProps({
 
 const emit = defineEmits(['next'])
 
+// Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
         username: yup.string().required('El nombre de usuario es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z0-9]+$/,"Solo numeros y letras sin caracteres especiales"),
@@ -116,6 +118,7 @@ const { handleSubmit } = useForm({
     })
 }); 
 
+// Manejo de errores
 const {value: username, errorMessage: usernameError} = useField("username")
 const {value: password, errorMessage: passwordError} = useField("password")
 const {value: email, errorMessage: emailError} = useField("email")
@@ -123,6 +126,7 @@ const {value: fullName, errorMessage: fullNameError} = useField("fullName")
 const {value: role, errorMessage: roleError} = useField("role")
 const {value: healthCenter, errorMessage: healthCenterError} = useField("healthCenter")
 
+// Envio
 const registro = handleSubmit((values) => {
     // Funcionalidad backend
     console.log('Formulario enviado con los siguientes datos:', values);
