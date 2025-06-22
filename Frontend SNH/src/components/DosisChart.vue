@@ -36,11 +36,8 @@ Importar y utilizar el componente donde se requiera mostrar la gráfica de dosis
 asegurándose de tener configurado el tema y las dependencias necesarias.
 -->
 <template>
-    <v-container class="mt-10" :style="{ background: isDark ? '#23272f' : '#D4D4D4', borderRadius: '16px', padding: '32px' }">
+    <v-container class="mt-10" :style="{ background: isDark ? '#23272f' : '#eee', borderRadius: '16px', padding: '32px' }">
         <v-responsive class="mx-auto" max-width="800" aspect-ratio="16/9">
-            <h3 :style="{ color: isDark ? '#fff' : '#222' }">
-                Gráfica de barras para dosis aplicada:
-            </h3>
             <div>
                 <v-select
                     v-model="filtro"

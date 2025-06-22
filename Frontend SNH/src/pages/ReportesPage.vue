@@ -1,6 +1,12 @@
 <template>
-    <div>
-        <h1>Bienvenido a Convit</h1>
-        <p>Panel principal del sistema de gestión de vacunas - Reportes.</p>
-    </div>
+    <v-container >
+        <v-responsive>
+            <h3 class="mb-4">Reportes de Vacunas:</h3>
+
+            <VacunasAplicadas></VacunasAplicadas>
+        </v-responsive>        
+    </v-container>
 </template>
+<script setup>
+import VacunasAplicadas from '@/components/VacunasAplicadas.vue';
+</script>

@@ -13,7 +13,12 @@
     - La propiedad computada `currentForm` selecciona dinámicamente el componente de formulario para el paso actual.
 -->
 <template>
-    <h3 m-auto>Formulario por pasos para el registro de una dosis aplicada.</h3>
+    <v-container class="text-center">
+        <v-responsive>
+            <h3>Formulario por pasos para el registro de una dosis aplicada.</h3>
+        </v-responsive>        
+    </v-container>
+
     <component :is="currentForm" @next="goToNextStep" :multistep="true"/>
     <DialogRegistroVacunas :modelValue="showDialog" @update:modelValue="showDialog = $event" />
 </template>
