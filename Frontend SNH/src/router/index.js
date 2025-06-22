@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import Home from '@/pages/HomePage.vue'
-import Pacientes from '@/pages/PacientesPage.vue'
-import Vacunas from '@/pages/VacunasPage.vue'
+import DosisAplicada from '@/pages/DosisAplicadaPage.vue'
 
 const routes = [
   {
@@ -10,8 +9,7 @@ const routes = [
     component: DefaultLayout,
     children: [
       { path: 'home', name: 'Home', component: Home },
-      { path: 'pacientes', name: 'Pacientes', component: Pacientes },
-      { path: 'vacunas', name: 'Vacunas', component: Vacunas },
+      { path: 'DosisAplicada', name: 'Dosis Aplicada', component: DosisAplicada },
     ],
   },
 ]

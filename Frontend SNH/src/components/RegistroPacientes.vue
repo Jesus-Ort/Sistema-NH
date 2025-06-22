@@ -151,6 +151,7 @@ const { value: email, errorMessage: emailError } = useField("email");
 
 
 const registro = handleSubmit((values) => {
+    // Funcionalidad backend
     console.log('Formulario enviado con los siguientes datos:', values);
     if (props.multistep) {
         emit('next')

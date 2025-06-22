@@ -124,6 +124,7 @@ const {value: initialQuantity, errorMessage: initialQuantityError} = useField("i
 const {value: availableQuantity, errorMessage: availableQuantityError} = useField("availableQuantity")
 
 const registro = handleSubmit((values) => {
+    // Funcionalidad backend
     console.log('Formulario enviado con los siguientes datos:', values);
     if (props.multistep) {
         emit('next')

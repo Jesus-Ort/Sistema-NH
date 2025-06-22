@@ -2,20 +2,20 @@
     <v-container class="d-flex justify-center align-center">
         <v-form class="pa-4 w-50 w-auto" >
 
-            <h2 class="text-center text-h4 mb-4 w-full">Pais</h2>
+            <h2 class="text-center text-h4 mb-4 w-full">Role</h2>
 
-            <p class="text-center mb-4">Porfavor ingresa el país de la vacuna.</p>
+            <p class="text-center mb-4">Porfavor ingresa el Role nuevo.</p>
 
-            <!-- Pais -->
+            <!-- Role -->
             <v-text-field
                 class="mt-4"
-                v-model="country"
+                v-model="role"
                 clearable
-                label="País"
+                label="Role"
                 required
                 color="text"
-                :error-messages="countryError"
-                prepend-icon="mdi-earth"
+                :error-messages="roleError"
+                prepend-icon="mdi-account-cog"
             ></v-text-field>
 
             <div class="d-flex justify-end mt-4">
@@ -43,11 +43,11 @@ const emit = defineEmits(['next'])
 
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        country: yup.string().required('El país es requerido').min(3,"Debe contener minimo 3 letras"),
+        role: yup.string().required('El rol es requerido').min(3,"Debe contener minimo 3 letras"),
     })
 }); 
 
-const {value: country, errorMessage: countryError} = useField("country")
+const {value: role, errorMessage: roleError} = useField("role")
 
 const registro = handleSubmit((values) => {
     // Funcionalidad backend

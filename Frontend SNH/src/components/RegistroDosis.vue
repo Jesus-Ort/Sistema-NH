@@ -140,6 +140,7 @@ const {value: healthProfessional, errorMessage: healthProfessionalError} = useFi
 const {value: observaciones, errorMessage: observacionesError} = useField("observaciones")
 
 const registro = handleSubmit((values) => {
+    // Funcionalidad backend
     console.log('Formulario enviado con los siguientes datos:', values);
     if (props.multistep) {
         emit('next')

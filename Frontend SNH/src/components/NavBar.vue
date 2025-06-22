@@ -8,23 +8,18 @@
     <!-- Spacer para empujar el logo al centro -->
     <v-spacer />
     <!-- Centro: Logo -->
-    <div class="d-flex align-center">
-        <Logo width="100" />
-    </div>
+    <RouterLink to="/home" class="text-decoration-none" style="all: unset; cursor: pointer;">
+        <div class="d-flex align-center">
+            <Logo width="100"/>
+        </div>
+    </RouterLink>
     <!-- Spacer para empujar los botones a la derecha -->
     <v-spacer />
     <v-divider vertical></v-divider>
     <!-- Derecha: Iconos -->
     <div class="d-flex align-center">
-        <v-btn class="ma-1" icon to="/home">
-            <v-icon>mdi-home</v-icon>
-        </v-btn>
         <v-divider vertical></v-divider>
-        <v-btn class="ma-1" icon to="/pacientes">
-            <v-icon>mdi-account-group</v-icon>
-        </v-btn>
-        <v-divider vertical></v-divider>
-        <v-btn class="ma-1" icon to="/vacunas">
+        <v-btn class="ma-1" icon to="/DosisAplicada">
             <v-icon>mdi-needle</v-icon>
         </v-btn>
         <v-divider vertical></v-divider>

@@ -61,7 +61,7 @@
             <v-autocomplete
                 class="mt-4"
                 v-model="role"
-                :items="['Rol 1', 'Rol 2', 'Rol 3']"
+                :items="['administrativo', 'salud']"
                 label="Rol"
                 color="text"
                 required
@@ -124,6 +124,7 @@ const {value: role, errorMessage: roleError} = useField("role")
 const {value: healthCenter, errorMessage: healthCenterError} = useField("healthCenter")
 
 const registro = handleSubmit((values) => {
+    // Funcionalidad backend
     console.log('Formulario enviado con los siguientes datos:', values);
     if (props.multistep) {
         emit('next')
