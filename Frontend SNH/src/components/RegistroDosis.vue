@@ -124,10 +124,10 @@ const { handleSubmit } = useForm({
         paciente: yup.string().required("El paciente es requerido").min(3,"Debe contener minimo 3 letras"),
         lote: yup.string().required('El número de lote es requerido').min(3,"Debe contener minimo 3 letras"),
         doseNumber: yup.number().required("El número de la dosis aplicada es requerido").min(1,"Debe ser al menos 1 dosis"),
-        aplicationDate: yup.date().required("La fecha de aplicacion es requerida").max(new Date(), 'La fecha de aplicacion no puede ser futura'),
+        aplicationDate: yup.date().typeError('Debe ser una fecha correcta').required("La fecha de aplicacion es requerida").max(new Date(), 'La fecha de aplicacion no puede ser futura'),
         center: yup.string().required("El centro de salud es requerido").min(3,"Debe contener minimo 3 letras"),
-        healthProfessional: yup.string().required("El Profesional de Salud es requerido").min(3,"Debe contener minimo 3 letras").matches(/^[a-zA-Z ]*$/, "Deben ser letras"),
-        observaciones: yup.string().max(1000,"Máximo 1000 letras")
+        healthProfessional: yup.string().required("El Profesional de Salud es requerido").min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
+        observaciones: yup.string().max(1000,"Máximo 1000 letras").min(5,"Minimo 5 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros")
     })
 }); 
 

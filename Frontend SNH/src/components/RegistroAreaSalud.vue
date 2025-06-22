@@ -79,9 +79,9 @@ const emit = defineEmits(['next'])
 
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        centerName: yup.string().required('El nombre del centro de salud es requerido').min(3,"Debe contener minimo 3 letras"),
-        centerAdress: yup.string().required('La dirección del centro de salud es requerida').min(5,"Debe contener minimo 5 letras"),
-        centerPhone: yup.string().required('El teléfono del centro de salud es requerido').min(7,"Debe contener minimo 7 números"),
+        centerName: yup.string().required('El nombre del centro de salud es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
+        centerAdress: yup.string().required('La dirección del centro de salud es requerida').min(5,"Debe contener minimo 5 letras").matches(/^[A-Za-z0-9]+$/,"Solo numeros y letras sin caracteres especiales"),
+        centerPhone: yup.string().required('El teléfono del centro de salud es requerido').min(7,"Debe contener minimo 7 números").matches(/^[0-9]+$/,"Solo pueden ser números"),
         centerEmail: yup.string().matches(/^[\w-.]+@(gmail\.com|outlook\.com|yahoo\.com|hotmail\.com)$/, 'Solo se permiten correos de Gmail, Outlook, Yahoo o Hotmail').required('El correo electrónico es requerido'),
     })
 }); 

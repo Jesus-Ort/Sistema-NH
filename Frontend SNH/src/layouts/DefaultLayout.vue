@@ -46,12 +46,23 @@ const allDrawerItems = [
     ],
   },
   {
-    title: 'Registro',
+    title: 'Registro Administrativo',
     items: [
-      { label: 'Registrar Paciente', icon: 'mdi-account-group', to: '/pacientes', roles: ['administrativo'] },
-      { label: 'Registrar Vacuna', icon: 'mdi-needle', to: '/vacunas', roles: ['administrativo'] },
-      { label: 'Registrar Usuario', icon: 'mdi-account-cog', to: '/usuarios', roles: ['administrativo'] },
-      { label: 'Registrar Dosis', icon: 'mdi-hospital', to: '/dosis', roles: ['administrativo', 'salud'] },
+      { label: 'Registrar Centro de Salud', icon: 'mdi-hospital-building', to: '/registro-area-salud', roles: ['administrativo'] },
+      { label: 'Registrar Dosis', icon: 'mdi-hospital', to: '/registro-dosis', roles: ['administrativo'] },
+      { label: 'Registrar Fabricante', icon: 'mdi-factory', to: '/registro-fabricantes', roles: ['administrativo'] },
+      { label: 'Registrar Lote', icon: 'mdi-package', to: '/registro-lotes', roles: ['administrativo'] },
+      { label: 'Registrar Paciente', icon: 'mdi-account-group', to: '/registro-pacientes', roles: ['administrativo'] },
+      { label: 'Registrar País', icon: 'mdi-earth', to: '/registro-pais', roles: ['administrativo'] },
+      { label: 'Registrar Rol', icon: 'mdi-account-key', to: '/registro-roles', roles: ['administrativo'] },
+      { label: 'Registrar Usuario', icon: 'mdi-account-cog', to: '/registro-usuarios', roles: ['administrativo'] },
+      { label: 'Registrar Vacuna', icon: 'mdi-needle', to: '/registro-vacunas', roles: ['administrativo'] },
+    ],
+  },
+    {
+    title: "Formularios",
+    items: [
+      { label: 'Dosis Aplicada', icon: 'mdi-hospital', to: '/dosis-aplicada', roles: ['administrativo', 'salud'] },
     ],
   },
 ]

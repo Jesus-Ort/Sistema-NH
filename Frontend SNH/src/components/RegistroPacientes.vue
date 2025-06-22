@@ -129,12 +129,12 @@ const emit = defineEmits(['next'])
 
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        nationalID: yup.string().required('La cédula de identidad es requerida').matches(/^\d{6,9}$/, 'Debe contener entre 6 y 9 dígitos'),
-        firstName: yup.string().required('El nombre es requerido').min(2, "Debe contener mínimo 2 letras").matches(/^[a-zA-Z ]*$/, "Deben ser letras"),
-        lastName: yup.string().required('El apellido es requerido').min(2, "Debe contener mínimo 2 letras").matches(/^[a-zA-Z ]*$/, "Deben ser letras"),
-        birthDate: yup.date().required('La fecha de nacimiento es requerida').max(new Date(), 'La fecha de nacimiento no puede ser futura'),
+        nationalID: yup.string().required('La cédula de identidad es requerida').matches(/^\d{6,9}$/, 'Debe contener entre 6 y 9 dígitos numéricos, sin letras ni caracteres especiales'),
+        firstName: yup.string().required('El nombre es requerido').min(2, "Debe contener mínimo 2 letras").matches(/^[a-zA-Z ]*$/, "Deben ser solo letras"),
+        lastName: yup.string().required('El apellido es requerido').min(2, "Debe contener mínimo 2 letras").matches(/^[a-zA-Z ]*$/, "Deben ser solo letras"),
+        birthDate: yup.date().typeError('Debe ser una fecha correcta').required('La fecha de nacimiento es requerida').max(new Date(), 'La fecha de nacimiento no puede ser futura'),
         gender: yup.string().required('El género es requerido').max(1,"Maximo 1 caracter"),
-        address: yup.string().required('La dirección es requerida'),
+        address: yup.string().required('La dirección es requerida').matches(/^[A-Za-z0-9]+$/,"Solo numeros y letras sin caracteres especiales"),
         phone: yup.string().required('El teléfono es requerido').matches(/^\d{7,14}$/, 'Debe contener entre 7 y 14 dígitos'),
         email: yup.string().matches(/^[\w-.]+@(gmail\.com|outlook\.com|yahoo\.com|hotmail\.com)$/, 'Solo se permiten correos de Gmail, Outlook, Yahoo o Hotmail').required('El correo electrónico es requerido'),
     })

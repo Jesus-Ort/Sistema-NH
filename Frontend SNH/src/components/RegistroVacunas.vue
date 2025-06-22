@@ -95,7 +95,7 @@ const emit = defineEmits(['next'])
 
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        name: yup.string().required('El nombre es requerido').min(3,"Debe contener minimo 3 letras"),
+        name: yup.string().required('El nombre es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z0-9]+$/,"Solo numeros y letras sin caracteres especiales"),
         manufacturer: yup.string().required('El fabricante es requerido').min(3,"Debe contener minimo 3 letras"),
         requiredDoses: yup.number().required('Las dosis requeridas son obligatorias').min(1, "Debe ser al menos 1 dosis"),
         intervalDoses: yup.number().required('El intervalo de dias para la dosis es obligatorio').min(1,"Debe ser al menos 1 día"),

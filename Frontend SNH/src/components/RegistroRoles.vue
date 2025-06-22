@@ -43,7 +43,7 @@ const emit = defineEmits(['next'])
 
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        role: yup.string().required('El rol es requerido').min(3,"Debe contener minimo 3 letras"),
+        role: yup.string().required('El rol es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
     })
 }); 
 

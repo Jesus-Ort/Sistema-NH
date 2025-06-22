@@ -43,7 +43,7 @@ const emit = defineEmits(['next'])
 
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        country: yup.string().required('El país es requerido').min(3,"Debe contener minimo 3 letras"),
+        country: yup.string().required('El país es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
     })
 }); 
 

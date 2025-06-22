@@ -107,10 +107,10 @@ const emit = defineEmits(['next'])
 
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        username: yup.string().required('El nombre de usuario es requerido').min(3,"Debe contener minimo 3 letras"),
+        username: yup.string().required('El nombre de usuario es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z0-9]+$/,"Solo numeros y letras sin caracteres especiales"),
         password: yup.string().required('La contraseña es requerida').min(6,"Debe contener minimo 6 letras"),
         email: yup.string().matches(/^[\w-.]+@(gmail\.com|outlook\.com|yahoo\.com|hotmail\.com)$/, 'Solo se permiten correos de Gmail, Outlook, Yahoo o Hotmail').required('El correo electrónico es requerido'),
-        fullName: yup.string().required('El nombre completo es requerido').min(3, "Debe contener minimo 3 letras").matches(/^[a-zA-Z ]*$/, "Deben ser letras"),
+        fullName: yup.string().required('El nombre completo es requerido').min(3, "Debe contener minimo 3 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
         role: yup.string().required('El rol es requerido'),
         healthCenter: yup.string().required('El centro de salud es requerido'),
     })

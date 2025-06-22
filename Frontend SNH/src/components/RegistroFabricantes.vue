@@ -57,7 +57,7 @@ const emit = defineEmits(['next'])
 
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        manufacturer: yup.string().required('El fabricante es requerido').min(3,"Debe contener minimo 3 letras"),
+        manufacturer: yup.string().required('El fabricante es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
         country: yup.string().required('El país es requerido').min(3,"Debe contener minimo 3 letras"),
     })
 }); 

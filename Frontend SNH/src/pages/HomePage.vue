@@ -3,4 +3,8 @@
         <h1>Bienvenido a Convit</h1>
         <p>Panel principal del sistema de gestión de vacunas - Home.</p>
     </div>
+    <DialogVacunas></DialogVacunas>
 </template>
+<script setup>
+import DialogVacunas from '@/components/DialogRegistroVacunas.vue'
+</script>

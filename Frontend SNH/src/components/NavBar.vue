@@ -19,9 +19,9 @@
     <!-- Derecha: Iconos -->
     <div class="d-flex align-center">
         <v-divider vertical></v-divider>
-        <v-btn class="ma-1" icon to="/DosisAplicada">
+        <!-- <v-btn class="ma-1" icon to="/dosis-aplicada">
             <v-icon>mdi-needle</v-icon>
-        </v-btn>
+        </v-btn> -->
         <v-divider vertical></v-divider>
         <darkMode class="ma-1"/>
         </div>
