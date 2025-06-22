@@ -2,16 +2,16 @@
   <v-app>
     <NavBar @toggle-drawer="drawer = !drawer"/>
 
-    <v-navigation-drawer v-model="drawer" app temporary>
-      <v-list nav>
-        <v-list-item link to="/home">
-          <v-list-item-title>Inicio</v-list-item-title>
-        </v-list-item>
-        <v-list-item link to="/pacientes">
-          <v-list-item-title>Pacientes</v-list-item-title>
-        </v-list-item>
-        <v-list-item link to="/vacunas">
-          <v-list-item-title>Vacunas</v-list-item-title>
+    <v-navigation-drawer app v-model="drawer">
+      <v-list nav dense>
+        <v-list-item
+          v-for="item in drawerItems"
+          :key="item.to"
+          :to="item.to"
+          :prepend-icon="item.icon"
+          link
+        >
+          <v-list-item-title>{{ item.label }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -23,8 +23,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import NavBar from '@/components/NavBar.vue'
 
 const drawer = ref(false)
+const userRole = ref('administrativo') // Sacar del Backend.
+
+const allDrawerItems = [
+  { label: 'Inicio', icon: 'mdi-home', to: '/home', roles: ['administrativo', 'salud'] },
+  { label: 'Pacientes', icon: 'mdi-account-group', to: '/pacientes', roles: ['salud'] },
+  { label: 'Vacunas', icon: 'mdi-needle', to: '/vacunas', roles: ['salud'] },
+  { label: 'Usuarios', icon: 'mdi-account-cog', to: '/usuarios', roles: ['administrativo'] },
+  { label: 'Reportes', icon: 'mdi-file-chart', to: '/reportes', roles: ['administrativo'] },
+  { label: 'Perfil', icon: 'mdi-account', to: '/perfil', roles: ['administrativo', 'salud'] },
+]
+
+const drawerItems = computed(() =>
+  allDrawerItems.filter(item => item.roles.includes(userRole.value))
+)
 </script>
