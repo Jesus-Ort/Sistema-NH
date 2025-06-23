@@ -2,7 +2,7 @@
     <v-container class="d-flex justify-center align-center">
         <v-form class="pa-4 w-50 w-auto" >
 
-            <h2 class="text-center text-h4 mb-4 w-full">Pais</h2>
+            <h2 class="text-center text-h4 mb-4 w-full">País</h2>
 
             <p class="text-center mb-4">Porfavor ingresa el país de la vacuna.</p>
 
