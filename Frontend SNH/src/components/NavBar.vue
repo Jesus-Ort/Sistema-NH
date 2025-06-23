@@ -37,7 +37,7 @@
     <!-- Spacer para empujar el logo al centro -->
     <v-spacer />
     <!-- Centro: Logo -->
-    <RouterLink to="/home" class="text-decoration-none" style="all: unset; cursor: pointer;">
+    <RouterLink to="/inicio" class="text-decoration-none" style="all: unset; cursor: pointer;">
         <div class="d-flex align-center">
             <Logo width="100"/>
         </div>

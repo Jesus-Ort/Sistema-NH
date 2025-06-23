@@ -23,8 +23,8 @@ const routes = [
     path: '/',
     component: DefaultLayout,
     children: [
-      { path: '', redirect: 'home' },
-      { path: 'home', name: 'Inicio', component: HomePage },
+      { path: '', redirect: 'inicio' },
+      { path: 'inicio', name: 'Inicio', component: HomePage },
       { path: 'reportes', name: 'Reportes', component: ReportesPage },
       { path: 'registro-area-salud', name: 'Centro de Salud', component: RegistroAreaSalud },
       { path: 'registro-dosis', name: 'Dosis', component: RegistroDosis },

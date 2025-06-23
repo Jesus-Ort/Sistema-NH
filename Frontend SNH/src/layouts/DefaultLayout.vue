@@ -75,7 +75,7 @@ const allDrawerItems = [
   {
     title: null,
     items: [
-      { label: 'Inicio', icon: 'mdi-home', to: '/home', roles: ['administrativo', 'salud'] },
+      { label: 'Inicio', icon: 'mdi-home', to: '/inicio', roles: ['administrativo', 'salud'] },
       { label: 'Reportes', icon: 'mdi-file-chart', to: '/reportes', roles: ['administrativo','salud'] },
     ],
   },
