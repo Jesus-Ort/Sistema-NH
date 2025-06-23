@@ -2,9 +2,9 @@
     <v-container class="d-flex justify-center align-center">
         <v-form class="pa-4 w-50 w-auto" >
 
-            <h2 class="text-center text-h4 mb-4 w-full">Role</h2>
+            <h2 class="text-center text-h4 mb-4 w-full">Rol</h2>
 
-            <p class="text-center mb-4">Porfavor ingresa el Role nuevo.</p>
+            <p class="text-center mb-4">Porfavor ingresa el Rol nuevo.</p>
 
             <!-- Role -->
             <v-text-field
