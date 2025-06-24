@@ -1,39 +1,53 @@
-<!-- 
-VacunasAplicadas.vue
+<!--
+    VacunasAplicadas.vue
 
-Componente Vue para la gestión y visualización de vacunas aplicadas a pacientes.
+    Componente Vue para mostrar, buscar, editar y eliminar registros de 
+    vacunas aplicadas a pacientes.
+    Utiliza Vuetify para la interfaz de usuario y un modal de 
+    confirmación personalizado.
 
-Características principales:
-- Búsqueda dinámica por vacuna, paciente, centro, fecha o dosis.
-- Tabla de datos con listado de vacunas aplicadas, usando Vuetify.
-- Acciones de edición y eliminación de registros.
-- Modal para editar los datos de una vacuna aplicada.
-- Soporte para modo oscuro mediante un composable.
-- Datos simulados para pruebas, con posibilidad de integración a backend (comentado).
-- Filtros de búsqueda insensibles a mayúsculas/minúsculas y acentos.
+    Funcionalidades principales:
+    - Visualización de una tabla de vacunas aplicadas con scroll horizontal en móviles.
+    - Búsqueda dinámica por vacuna, paciente, centro, fecha o dosis.
+    - Edición de registros mediante un modal.
+    - Eliminación de registros con confirmación.
+    - Soporte para modo oscuro mediante un composable.
+    - Datos de ejemplo simulados; preparado para integración con backend.
 
-Props: Ninguna.
+    Props:
+        Ninguna.
 
-Variables reactivas:
-- vacunas: Lista de vacunas aplicadas.
-- loading: Estado de carga de la tabla.
-- modal: Controla la visibilidad del modal de edición.
-- form: Datos del formulario de edición.
-- busqueda: Texto de búsqueda ingresado por el usuario.
+    Variables y estados:
+        - isDark: indica si el modo oscuro está activo.
+        - vacunas: lista reactiva de vacunas aplicadas.
+        - loading: estado de carga de la tabla.
+        - modal: controla la visibilidad del modal de edición.
+        - mostrarDialogo: controla la visibilidad del diálogo de confirmación.
+        - vacunaBorrar: almacena el registro seleccionado para eliminar.
+        - form: modelo reactivo para el formulario de edición.
+        - busqueda: texto de búsqueda ingresado por el usuario.
+        - headers: configuración de columnas de la tabla.
+        - datosFalsos: datos simulados para pruebas.
 
-Métodos principales:
-- obtenerVacunas: Carga los datos de vacunas (simulados o desde backend).
-- abrirModal: Abre el modal de edición con los datos seleccionados.
-- guardarCambios: Guarda los cambios realizados en el modal.
-- borrarVacuna: Elimina una vacuna de la lista (con confirmación).
-- normalizar: Normaliza texto para búsqueda insensible a acentos y mayúsculas.
-- vacunasFiltradas: Computed que retorna la lista filtrada según la búsqueda.
+    Métodos principales:
+        - obtenerVacunas: carga los datos de vacunas (simulado, preparado para backend).
+        - abrirModal: abre el modal de edición con los datos seleccionados.
+        - guardarCambios: guarda los cambios editados en el registro.
+        - prepararEliminacion: prepara el registro para eliminar y muestra el 
+        diálogo de confirmación.
+        - confirmarEliminacion: elimina el registro seleccionado.
+        - normalizar: normaliza texto para búsquedas insensibles a acentos y mayúsculas.
+        - vacunasFiltradas: computed que filtra los registros según el texto de búsqueda.
 
-Dependencias:
-- Vue 3 (Composition API)
-- Vuetify
-- Composable useDarkMode (para modo oscuro)
---> 
+    Componentes hijos:
+        - ConfirmDialog: diálogo de confirmación reutilizable.
+
+    Uso:
+        Importar y utilizar dentro de una vista o layout principal para gestionar 
+        vacunas aplicadas.
+
+-->
+
 <template>
     <v-container fluid>
         <v-row>
@@ -93,7 +107,9 @@ Dependencias:
             <v-card-title>Editar Vacuna</v-card-title>
             <v-card-text>
             <v-form>
-                <v-text-field label="Nombre" v-model="form.nombre" />
+                <v-text-field label="Vacuna" v-model="form.vacuna" />
+                <v-text-field label="Paciente" v-model="form.paciente" />
+                <v-text-field label="Centro" v-model="form.centro" />
                 <v-text-field label="Fecha" v-model="form.fecha" type="date" />
                 <v-text-field label="Dosis" v-model="form.dosis" />
             </v-form>
@@ -327,7 +343,10 @@ const abrirModal = (item) => {
 const guardarCambios = async () => {
     const index = vacunas.value.findIndex(v => v.id === form.value.id)
     if (index !== -1) {
-        vacunas.value[index] = { ...form.value }
+        vacunas.value[index] = {
+        ...vacunas.value[index],
+        ...form.value
+        }
     }
     modal.value = false
 
