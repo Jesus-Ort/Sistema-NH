@@ -13,7 +13,7 @@
                         class="mt-4"
                         v-model="role"
                         clearable
-                        label="Role"
+                        label="Rol"
                         required
                         color="text"
                         :error-messages="roleError"
