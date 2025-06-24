@@ -1,82 +1,83 @@
 <template>
-    <v-container class="d-flex justify-center align-center">
-        <v-form class="pa-4 w-50 w-auto" >
-
-            <h2 class="text-center text-h4 mb-4 w-full">Vacunas</h2>
-
-            <p class="text-center mb-4">Porfavor ingresa los datos de la vacuna.</p>
-
-            <!-- Nombre -->
-            <v-text-field
-                class="mt-4"
-                v-model="name"
-                clearable
-                label="Nombre de la vacuna"
-                required
-                color="text"
-                :error-messages="nameError"
-                prepend-icon="mdi-needle"
-            ></v-text-field>
-
-
-            <!-- Buscado por nombre, agregado como array, devolver ID  -->
-            <!-- Fabricante -->
-            <v-autocomplete
-                class="mt-4"
-                v-model="manufacturer"
-                :items="['Fabricante 1', 'Fabricante 2', 'Fabricante 3']"
-                label="Fabricante"
-                color="text"
-                required
-                :error-messages="manufacturerError"
-                prepend-icon="mdi-factory">
-            </v-autocomplete>
-
-            <!-- Dosis requerida -->
-            <v-number-input 
-                class="mt-4"
-                v-model="requiredDoses"
-                clearable
-                label="Dosis requerida para la inmunización"
-                required
-                color="text"
-                :error-messages="requiredDosesError"
-                prepend-icon="mdi-check"
-                control-variant="hidden"
-            ></v-number-input>
-
-            <!-- Intervalo de dias entre dosis -->
-            <v-number-input 
-                class="mt-4"
-                v-model="intervalDoses"
-                clearable
-                label="Intervalo recomendado entre dosis en días"
-                required
-                color="text"
-                :error-messages="intervalDosesError"
-                prepend-icon="mdi-calendar-range"
-                control-variant="hidden"
-            ></v-number-input>
-
-            <!-- Temperatura -->
-            <v-text-field
-                class="mt-4"
-                v-model="temperature"
-                clearable
-                label="Requisitos de temperatura de almacenamiento"
-                required
-                color="text"
-                :error-messages="temperatureError"
-                prepend-icon="mdi-thermometer"
-            ></v-text-field>
-
-            <div class="d-flex justify-end mt-4">
-
-                <v-btn @click="registro()" block color="success">Registrar</v-btn>
-
-            </div>
-
-        </v-form>
+    <v-container fluid class="d-flex justify-center align-center" style="min-height: 100vh;">
+        <v-row justify="center">
+            <v-col cols="12" sm="8" md="6" lg="4">
+                <v-form class="pa-4" >
+        
+                    <h2 class="text-center text-h4 mb-4 w-full">Vacunas</h2>
+        
+                    <p class="text-center mb-4">Porfavor ingresa los datos de la vacuna.</p>
+        
+                    <!-- Nombre -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="name"
+                        clearable
+                        label="Nombre de la vacuna"
+                        required
+                        color="text"
+                        :error-messages="nameError"
+                        prepend-icon="mdi-needle"
+                    ></v-text-field>
+        
+        
+                    <!-- Buscado por nombre, agregado como array, devolver ID  -->
+                    <!-- Fabricante -->
+                    <v-autocomplete
+                        class="mt-4"
+                        v-model="manufacturer"
+                        :items="['Fabricante 1', 'Fabricante 2', 'Fabricante 3']"
+                        label="Fabricante"
+                        color="text"
+                        required
+                        :error-messages="manufacturerError"
+                        prepend-icon="mdi-factory">
+                    </v-autocomplete>
+        
+                    <!-- Dosis requerida -->
+                    <v-number-input 
+                        class="mt-4"
+                        v-model="requiredDoses"
+                        clearable
+                        label="Dosis requerida para la inmunización"
+                        required
+                        color="text"
+                        :error-messages="requiredDosesError"
+                        prepend-icon="mdi-check"
+                        control-variant="hidden"
+                    ></v-number-input>
+        
+                    <!-- Intervalo de dias entre dosis -->
+                    <v-number-input 
+                        class="mt-4"
+                        v-model="intervalDoses"
+                        clearable
+                        label="Intervalo recomendado entre dosis en días"
+                        required
+                        color="text"
+                        :error-messages="intervalDosesError"
+                        prepend-icon="mdi-calendar-range"
+                        control-variant="hidden"
+                    ></v-number-input>
+        
+                    <!-- Temperatura -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="temperature"
+                        clearable
+                        label="Requisitos de temperatura de almacenamiento"
+                        required
+                        color="text"
+                        :error-messages="temperatureError"
+                        prepend-icon="mdi-thermometer"
+                    ></v-text-field>
+        
+                    <div class="d-flex justify-end mt-4">
+                        <v-btn @click="registro()" block color="success">Registrar</v-btn>
+                    </div>
+                </v-form>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 

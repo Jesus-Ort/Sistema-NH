@@ -36,21 +36,33 @@ Importar y utilizar el componente donde se requiera mostrar la gráfica de dosis
 asegurándose de tener configurado el tema y las dependencias necesarias.
 -->
 <template>
-    <v-container class="mt-10" :style="{ background: isDark ? '#23272f' : '#eee', borderRadius: '16px', padding: '32px' }">
-        <v-responsive class="mx-auto" max-width="800" aspect-ratio="16/9">
+    <v-container fluid class="mt-10">
+        <v-row justify="center">
+        <v-col cols="12" sm="10" md="12">
+            <v-sheet
+            elevation="2"
+            rounded
+            :color="isDark ? '#23272f' : '#eee'"
+            class="pa-6"
+            >
+            <!-- Selector de filtro -->
+            <v-select
+                v-model="filtro"
+                :items="['Día', 'Semana', 'Mes']"
+                label="Filtro"
+                class="mb-4"
+                :color="isDark ? 'text' : 'text'"
+                :theme="isDark ? 'SNHdark' : 'SNH'"
+                :style="{ color: isDark ? '#fff' : '#222' }"
+            />
+
+            <!-- Gráfico responsivo -->
             <div>
-                <v-select
-                    v-model="filtro"
-                    :items="['Día', 'Semana', 'Mes']"
-                    label="Filtro"
-                    class="mb-4"
-                    :color="isDark ? 'text' : 'text'"
-                    :theme="isDark ? 'SNHdark' : 'SNH'"
-                    :style="{ color: isDark ? '#fff' : '#222', borderRadius: '8px' }"
-                />
                 <Bar :data="chartData" :options="chartOptions" />
             </div>
-        </v-responsive>
+            </v-sheet>
+        </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -110,6 +122,7 @@ const chartData = computed(() => ({
 
 const chartOptions = computed(() => ({
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
         legend: {
             labels: {

@@ -1,116 +1,117 @@
 <template>
-    <v-container class="d-flex justify-center align-center">
-        <v-form class="pa-4 w-50 w-auto" >
-            
-            <h2 class="text-center text-h4 mb-4 w-full">Registro De Pacientes</h2>
-
-            <p class="text-center mb-4">Porfavor ingresa los datos para el registro del paciente.</p>
-
-            <!-- Cedula de Identidad -->
-            <v-text-field
-                class="mt-4"
-                v-model="nationalID"
-                clearable
-                label="Cedula de Identidad"
-                color="text"
-                required
-                :error-messages="cedulaError"
-                prepend-icon="mdi-card"
-            ></v-text-field>
-
-            <!-- Nombre -->
-            <v-text-field
-                class="mt-4"
-                v-model="firstName"
-                clearable
-                label="Nombre"
-                color="text"
-                required
-                :error-messages="firstNameError"
-                prepend-icon="mdi-account">
-            </v-text-field>
-
-            <!-- Apellido -->
-            <v-text-field
-                class="mt-4"
-                v-model="lastName"
-                clearable
-                label="Apellido"
-                color="text"
-                required
-                :error-messages="lastNameError"
-                prepend-icon="mdi-account-box">
-            </v-text-field>
-
-            <!-- Fecha de Nacimiento -->
-            <v-text-field
-                class="mt-4"
-                v-model="birthDate"
-                clearable
-                label="Fecha de Nacimiento"
-                type="date"
-                color="text"
-                required
-                :error-messages="birthDateError"
-                prepend-icon="mdi-calendar">
-            </v-text-field>
-
-            <!-- Genero -->
-            <v-select
-                class="mt-4"
-                v-model="gender"
-                :items="['M', 'F', 'O']"
-                label="Género"
-                color="text"
-                required
-                :error-messages="genderError"
-                prepend-icon="mdi-gender-male-female">
-            </v-select>
-
-            <!-- Dirección -->
-            <v-text-field
-                class="mt-4"
-                v-model="address"
-                clearable
-                label="Dirección"
-                color="text"
-                required
-                :error-messages="addressError"
-                prepend-icon="mdi-home">
-            </v-text-field>
-
-            <!-- Teléfono -->
-            <v-text-field
-                class="mt-4"
-                v-model="phone"
-                clearable
-                label="Teléfono"
-                color="text"
-                required
-                :error-messages="phoneError"
-                prepend-icon="mdi-phone">
-            </v-text-field>
-
-            <!-- Email -->
-            <v-text-field
-                class="mt-4"
-                v-model="email"
-                clearable
-                label="Email"
-                type="email"
-                color="text"
-                required
-                :error-messages="emailError"
-                prepend-icon="mdi-email">
-            </v-text-field>
-
-            <div class="d-flex justify-end mt-4">
-
-                <v-btn @click="registro()" block color="success">Registrar</v-btn>
-
-            </div>
-
-        </v-form>
+    <v-container fluid class="d-flex justify-center align-center" style="min-height: 100vh;">
+        <v-row justify="center">
+            <v-col cols="12" sm="8" md="6" lg="4">
+                <v-form class="pa-4">
+                    
+                    <h2 class="text-center text-h4 mb-4 w-full">Registro De Pacientes</h2>
+        
+                    <p class="text-center mb-4">Porfavor ingresa los datos para el registro del paciente.</p>
+        
+                    <!-- Cedula de Identidad -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="nationalID"
+                        clearable
+                        label="Cedula de Identidad"
+                        color="text"
+                        required
+                        :error-messages="cedulaError"
+                        prepend-icon="mdi-card"
+                    ></v-text-field>
+        
+                    <!-- Nombre -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="firstName"
+                        clearable
+                        label="Nombre"
+                        color="text"
+                        required
+                        :error-messages="firstNameError"
+                        prepend-icon="mdi-account">
+                    </v-text-field>
+        
+                    <!-- Apellido -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="lastName"
+                        clearable
+                        label="Apellido"
+                        color="text"
+                        required
+                        :error-messages="lastNameError"
+                        prepend-icon="mdi-account-box">
+                    </v-text-field>
+        
+                    <!-- Fecha de Nacimiento -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="birthDate"
+                        clearable
+                        label="Fecha de Nacimiento"
+                        type="date"
+                        color="text"
+                        required
+                        :error-messages="birthDateError"
+                        prepend-icon="mdi-calendar">
+                    </v-text-field>
+        
+                    <!-- Genero -->
+                    <v-select
+                        class="mt-4"
+                        v-model="gender"
+                        :items="['M', 'F', 'O']"
+                        label="Género"
+                        color="text"
+                        required
+                        :error-messages="genderError"
+                        prepend-icon="mdi-gender-male-female">
+                    </v-select>
+        
+                    <!-- Dirección -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="address"
+                        clearable
+                        label="Dirección"
+                        color="text"
+                        required
+                        :error-messages="addressError"
+                        prepend-icon="mdi-home">
+                    </v-text-field>
+        
+                    <!-- Teléfono -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="phone"
+                        clearable
+                        label="Teléfono"
+                        color="text"
+                        required
+                        :error-messages="phoneError"
+                        prepend-icon="mdi-phone">
+                    </v-text-field>
+        
+                    <!-- Email -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="email"
+                        clearable
+                        label="Email"
+                        type="email"
+                        color="text"
+                        required
+                        :error-messages="emailError"
+                        prepend-icon="mdi-email">
+                    </v-text-field>
+        
+                    <div class="d-flex justify-end mt-4">
+                        <v-btn @click="registro()" block color="success">Registrar</v-btn>
+                    </div>
+                </v-form>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 

@@ -1,107 +1,108 @@
 <template>
-    <v-container class="d-flex justify-center align-center">
-        <v-form class="pa-4 w-50 w-auto" >
-
-            <h2 class="text-center text-h4 mb-4 w-full">Dosis</h2>
-
-            <p class="text-center mb-4">Porfavor ingresa los datos de la dosis.</p>
-
-            <!-- Buscado por nombre, agregado como array, devolver ID  -->
-            <!-- Paciente -->
-            <v-autocomplete
-                class="mt-4"
-                v-model="paciente"
-                :items="['Paciente 1', 'Paciente 2', 'Paciente 3']"
-                label="C.I del Paciente"
-                color="text"
-                required
-                :error-messages="pacienteError"
-                prepend-icon="mdi-human">
-            </v-autocomplete>
-            
-            <!-- Buscado por nombre, agregado como array, devolver ID  -->
-            <!--Numero de Lote -->
-            <v-autocomplete
-                class="mt-4"
-                v-model="lote"
-                :items="['Lote 1', 'Lote 2', 'Lote 3']"
-                label="Numero del Lote"
-                color="text"
-                required
-                :error-messages="loteError"
-                prepend-icon="mdi-package">
-            </v-autocomplete>
-
-            <!-- Numero de dosis -->
-            <v-number-input 
-                class="mt-4"
-                v-model="doseNumber"
-                clearable
-                label=" Número de la dosis"
-                required
-                color="text"
-                :error-messages="doseNumberError"
-                prepend-icon="mdi-needle"
-                control-variant="hidden"
-            ></v-number-input>
-
-            <!--  Fecha de aplicacion de la dosis  -->
-            <v-text-field
-                class="mt-4"
-                v-model="aplicationDate"
-                clearable
-                label="Fecha de aplicacion de la dosis"
-                type="date"
-                color="text"
-                required
-                :error-messages="aplicationDateError"
-                prepend-icon="mdi-calendar">
-            </v-text-field>
-
-            <!-- Buscado por nombre, agregado como array, devolver ID  -->
-            <!-- Centro de Salud -->
-            <v-autocomplete
-                class="mt-4"
-                v-model="center"
-                :items="['Centro de Salud 1', 'Centro de Salud 2', 'Centro de Salud 3']"
-                label="Centro de Salud"
-                color="text"
-                required
-                :error-messages="centerError"
-                prepend-icon="mdi-hospital-building">
-            </v-autocomplete>
-
-            <!-- Nombre del profesional de salud que aplicó la dosis -->
-            <v-text-field
-                class="mt-4"
-                v-model="healthProfessional"
-                clearable
-                label="Nombre de quién aplicó la dosis"
-                required
-                color="text"
-                :error-messages="healthProfessionalError"
-                prepend-icon="mdi-stethoscope"
-            ></v-text-field>
-
-            <!-- Observaciones -->
-            <v-text-field
-                class="mt-4"
-                v-model="observaciones"
-                clearable
-                label="Observaciones"
-                required
-                color="text"
-                :error-messages="observacionesError"
-                prepend-icon="mdi-eye"
-            ></v-text-field>
-
-            <div class="d-flex justify-end mt-4">
-
-                <v-btn @click="registro()" block color="success">Registrar</v-btn>
-
-            </div>
-
-        </v-form>
+    <v-container fluid class="d-flex justify-center align-center" style="min-height: 100vh;">
+        <v-row justify="center">
+            <v-col cols="12" sm="8" md="6" lg="4">
+                <v-form class="pa-4">
+        
+                    <h2 class="text-center text-h4 mb-4 w-full">Dosis</h2>
+        
+                    <p class="text-center mb-4">Porfavor ingresa los datos de la dosis.</p>
+        
+                    <!-- Buscado por nombre, agregado como array, devolver ID  -->
+                    <!-- Paciente -->
+                    <v-autocomplete
+                        class="mt-4"
+                        v-model="paciente"
+                        :items="['Paciente 1', 'Paciente 2', 'Paciente 3']"
+                        label="C.I del Paciente"
+                        color="text"
+                        required
+                        :error-messages="pacienteError"
+                        prepend-icon="mdi-human">
+                    </v-autocomplete>
+                    
+                    <!-- Buscado por nombre, agregado como array, devolver ID  -->
+                    <!--Numero de Lote -->
+                    <v-autocomplete
+                        class="mt-4"
+                        v-model="lote"
+                        :items="['Lote 1', 'Lote 2', 'Lote 3']"
+                        label="Numero del Lote"
+                        color="text"
+                        required
+                        :error-messages="loteError"
+                        prepend-icon="mdi-package">
+                    </v-autocomplete>
+        
+                    <!-- Numero de dosis -->
+                    <v-number-input 
+                        class="mt-4"
+                        v-model="doseNumber"
+                        clearable
+                        label=" Número de la dosis"
+                        required
+                        color="text"
+                        :error-messages="doseNumberError"
+                        prepend-icon="mdi-needle"
+                        control-variant="hidden"
+                    ></v-number-input>
+        
+                    <!--  Fecha de aplicacion de la dosis  -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="aplicationDate"
+                        clearable
+                        label="Fecha de aplicacion de la dosis"
+                        type="date"
+                        color="text"
+                        required
+                        :error-messages="aplicationDateError"
+                        prepend-icon="mdi-calendar">
+                    </v-text-field>
+        
+                    <!-- Buscado por nombre, agregado como array, devolver ID  -->
+                    <!-- Centro de Salud -->
+                    <v-autocomplete
+                        class="mt-4"
+                        v-model="center"
+                        :items="['Centro de Salud 1', 'Centro de Salud 2', 'Centro de Salud 3']"
+                        label="Centro de Salud"
+                        color="text"
+                        required
+                        :error-messages="centerError"
+                        prepend-icon="mdi-hospital-building">
+                    </v-autocomplete>
+        
+                    <!-- Nombre del profesional de salud que aplicó la dosis -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="healthProfessional"
+                        clearable
+                        label="Nombre de quién aplicó la dosis"
+                        required
+                        color="text"
+                        :error-messages="healthProfessionalError"
+                        prepend-icon="mdi-stethoscope"
+                    ></v-text-field>
+        
+                    <!-- Observaciones -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="observaciones"
+                        clearable
+                        label="Observaciones"
+                        required
+                        color="text"
+                        :error-messages="observacionesError"
+                        prepend-icon="mdi-eye"
+                    ></v-text-field>
+        
+                    <div class="d-flex justify-end mt-4">
+                        <v-btn @click="registro()" block color="success">Registrar</v-btn>
+                    </div>
+                </v-form>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 

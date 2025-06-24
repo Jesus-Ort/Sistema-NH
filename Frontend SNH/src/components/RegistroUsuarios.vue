@@ -1,94 +1,95 @@
 <template>
-    <v-container class="d-flex justify-center align-center">
-        <v-form class="pa-4 w-50 w-auto" >
-
-            <h2 class="text-center text-h4 mb-4 w-full">Registro De Usuarios</h2>
-
-            <p class="text-center mb-4">Porfavor ingresa los datos para el registro.</p>
-
-            <!-- Username -->
-            <v-text-field
-                class="mt-4"
-                v-model="username"
-                clearable
-                label="Nombre de Usuario"
-                required
-                color="text"
-                :error-messages="usernameError"
-                prepend-icon="mdi-account"
-            ></v-text-field>
-
-            <!-- Password -->   
-            <v-text-field
-                class="mt-4"
-                v-model="password"
-                clearable
-                label="Contraseña"
-                type="password"
-                color="text"
-                required
-                :error-messages="passwordError"
-                prepend-icon="mdi-lock"
-            ></v-text-field>
-
-            <!-- Email -->
-            <v-text-field
-                class="mt-4"
-                v-model="email"
-                clearable
-                label="Email"
-                type="email"
-                color="text"
-                required
-                :error-messages="emailError"
-                prepend-icon="mdi-email">
-            </v-text-field>
-
-            <!-- Nombre Completo -->
-            <v-text-field
-                class="mt-4"
-                v-model="fullName"
-                clearable
-                label="Nombre Completo"
-                color="text"
-                required
-                :error-messages="fullNameError"
-                prepend-icon="mdi-account-box">
-            </v-text-field>
-
-            <!-- Buscado por nombre, agregado como array, devolver ID  -->
-            <!-- Rol -->
-            <v-autocomplete
-                class="mt-4"
-                v-model="role"
-                :items="['administrativo', 'salud']"
-                label="Rol"
-                color="text"
-                required
-                :error-messages="roleError"
-                prepend-icon="mdi-account-cog">
-            </v-autocomplete>
-
-            <!-- Buscado por nombre, agregado como array, devolver ID  -->
-            <!-- Centro de Salud -->
-            <v-autocomplete
-                class="mt-4"
-                v-model="healthCenter"
-                :items="['Centro de Salud 1', 'Centro de Salud 2', 'Centro de Salud 3']"
-                label="Centro de Salud"
-                color="text"
-                required
-                :error-messages="healthCenterError"
-                prepend-icon="mdi-hospital-building">
-            </v-autocomplete>
-
-            <div class="d-flex justify-end mt-4">
-
-                <v-btn @click="registro()" block color="success">Registrar</v-btn>
-
-            </div>
-
-        </v-form>
+    <v-container fluid class="d-flex justify-center align-center" style="min-height: 100vh;">
+        <v-row justify="center">
+            <v-col cols="12" sm="8" md="6" lg="4">
+                <v-form class="pa-4" >
+        
+                    <h2 class="text-center text-h4 mb-4 w-full">Registro De Usuarios</h2>
+        
+                    <p class="text-center mb-4">Porfavor ingresa los datos para el registro.</p>
+        
+                    <!-- Username -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="username"
+                        clearable
+                        label="Nombre de Usuario"
+                        required
+                        color="text"
+                        :error-messages="usernameError"
+                        prepend-icon="mdi-account"
+                    ></v-text-field>
+        
+                    <!-- Password -->   
+                    <v-text-field
+                        class="mt-4"
+                        v-model="password"
+                        clearable
+                        label="Contraseña"
+                        type="password"
+                        color="text"
+                        required
+                        :error-messages="passwordError"
+                        prepend-icon="mdi-lock"
+                    ></v-text-field>
+        
+                    <!-- Email -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="email"
+                        clearable
+                        label="Email"
+                        type="email"
+                        color="text"
+                        required
+                        :error-messages="emailError"
+                        prepend-icon="mdi-email">
+                    </v-text-field>
+        
+                    <!-- Nombre Completo -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="fullName"
+                        clearable
+                        label="Nombre Completo"
+                        color="text"
+                        required
+                        :error-messages="fullNameError"
+                        prepend-icon="mdi-account-box">
+                    </v-text-field>
+        
+                    <!-- Buscado por nombre, agregado como array, devolver ID  -->
+                    <!-- Rol -->
+                    <v-autocomplete
+                        class="mt-4"
+                        v-model="role"
+                        :items="['administrativo', 'salud']"
+                        label="Rol"
+                        color="text"
+                        required
+                        :error-messages="roleError"
+                        prepend-icon="mdi-account-cog">
+                    </v-autocomplete>
+        
+                    <!-- Buscado por nombre, agregado como array, devolver ID  -->
+                    <!-- Centro de Salud -->
+                    <v-autocomplete
+                        class="mt-4"
+                        v-model="healthCenter"
+                        :items="['Centro de Salud 1', 'Centro de Salud 2', 'Centro de Salud 3']"
+                        label="Centro de Salud"
+                        color="text"
+                        required
+                        :error-messages="healthCenterError"
+                        prepend-icon="mdi-hospital-building">
+                    </v-autocomplete>
+        
+                    <div class="d-flex justify-end mt-4">
+                        <v-btn @click="registro()" block color="success">Registrar</v-btn>
+                    </div>
+                </v-form>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 

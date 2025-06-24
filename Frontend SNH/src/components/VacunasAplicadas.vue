@@ -35,8 +35,11 @@ Dependencias:
 - Composable useDarkMode (para modo oscuro)
 --> 
 <template>
-    <div>
-        <v-text-field
+    <v-container fluid>
+        <v-row>
+        <v-col cols="12">
+            <!-- Campo de búsqueda -->
+            <v-text-field
             v-model="busqueda"
             label="Buscar vacuna, paciente, centro, fecha, etc."
             prepend-inner-icon="mdi-magnify"
@@ -44,30 +47,48 @@ Dependencias:
             :color="isDark ? 'text' : 'text'"
             :theme="isDark ? 'SNHdark' : 'SNH'"
             class="mb-4"
-        />
+            />
+        </v-col>
+        </v-row>
 
-        <v-data-table
-        :headers="headers"
-        :items="vacunasFiltradas"
-        :loading="loading"
-        loading-text="Cargando vacunas..."
-        class="elevation-1"
-        :items-per-page-text="'Ítems por páginas'"
-        :style="{ background: isDark ? '#23272f' : '#eee', borderRadius: '16px', padding: '32px' }"
-        >
+        <v-row>
+        <v-col cols="12">
+            <!-- Tabla con scroll horizontal en móviles -->
+            <div style="overflow-x: auto;">
+            <v-data-table
+                :headers="headers"
+                :items="vacunasFiltradas"
+                :loading="loading"
+                loading-text="Cargando vacunas..."
+                class="elevation-1"
+                :items-per-page-text="'Ítems por páginas'"
+                :style="{
+                background: isDark ? '#23272f' : '#eee',
+                borderRadius: '16px',
+                padding: '16px',
+                minWidth: '600px'  /* <-- Evita que se colapse en pantallas pequeñas */
+                }"
+            >
+                <template #item.acciones="{ item }">
+                <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
+                    <v-icon class="text-white">mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn
+                icon
+                color="error"
+                class="mb-1 mt-1"
+                @click="prepararEliminacion(item)"
+                >
+                <v-icon class="text-white">mdi-delete</v-icon>
+                </v-btn>
+                </template>
+            </v-data-table>
+            </div>
+        </v-col>
+        </v-row>
 
-        <template #item.acciones="{ item }">
-            <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
-            <v-icon class="text-white">mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn icon color="error" class="mb-1 mt-1" @click="borrarVacuna(item.id)">
-            <v-icon class="text-white">mdi-delete</v-icon>
-            </v-btn>
-        </template>
-        </v-data-table>
-
-        <!-- MODAL DE EDICIÓN -->
-        <v-dialog v-model="modal" max-width="500">
+        <!-- Modal de edición -->
+        <v-dialog v-model="modal" max-width="90%">
         <v-card>
             <v-card-title>Editar Vacuna</v-card-title>
             <v-card-text>
@@ -84,12 +105,20 @@ Dependencias:
             </v-card-actions>
         </v-card>
         </v-dialog>
-    </div>
+
+        <!-- Modal de Confirmación -->
+            <ConfirmDialog
+            v-model="mostrarDialogo"
+            title="Confirmar"
+            :message="mensajeDialogo"
+            @confirm="confirmarEliminacion"
+            />
+    </v-container>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { useDarkMode } from '@/composables/useDarkMode'
 // import axios from 'axios'
 
@@ -97,7 +126,8 @@ const { isDark } = useDarkMode()
 const vacunas = ref([])
 const loading = ref(true)
 const modal = ref(false)
-
+const mostrarDialogo = ref(false)
+const vacunaBorrar = ref({})
 const form = ref({ id: null, vacuna: '', paciente:'', fecha: '', dosis: '', centro:'', })
 
 const busqueda = ref('');
@@ -310,18 +340,37 @@ const guardarCambios = async () => {
     // obtenerVacunas()
 }
 
-const borrarVacuna = async (id) => {
-    if (!confirm('¿Estás seguro de borrar esta vacuna?')) return
-    vacunas.value = vacunas.value.filter(v => v.id !== id)
+const mensajeDialogo = computed(() => {
+    return vacunaBorrar.value && vacunaBorrar.value.paciente
+    ? `¿Deseas borrar la vacuna aplicada a ${vacunaBorrar.value.paciente}?`
+    : '¿Deseas borrar esta vacuna?'
+})
 
-    // Funcionalidad backend aqui:
-    // if (!confirm('¿Estás seguro de borrar esta vacuna?')) return
-    // const token = localStorage.getItem('token')
-    // await axios.delete(`/api/vacunas-aplicadas/${id}`, {
-    //     headers: { Authorization: `Bearer ${token}` }
-    // })
-    // obtenerVacunas()
+const prepararEliminacion = (item) => {
+    vacunaBorrar.value = item
+    mostrarDialogo.value = true
 }
+
+const confirmarEliminacion = async () => {
+    if (vacunaBorrar.value && vacunaBorrar.value.id) {
+        vacunas.value = vacunas.value.filter(v => v.id !== vacunaBorrar.value.id)
+    }
+    vacunaBorrar.value = {}
+    mostrarDialogo.value = false 
+}
+
+// const borrarVacuna = async (id) => {
+//     if (!confirm('¿Estás seguro de borrar esta vacuna?')) return
+//     vacunas.value = vacunas.value.filter(v => v.id !== id)
+
+//     // Funcionalidad backend aqui:
+//     // if (!confirm('¿Estás seguro de borrar esta vacuna?')) return
+//     // const token = localStorage.getItem('token')
+//     // await axios.delete(`/api/vacunas-aplicadas/${id}`, {
+//     //     headers: { Authorization: `Bearer ${token}` }
+//     // })
+//     // obtenerVacunas()
+// }
 
 // Filtro de busqueda
 // Normalizar texto del input

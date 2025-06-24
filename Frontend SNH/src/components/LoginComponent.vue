@@ -1,10 +1,12 @@
 <template>
-    <v-container class="d-flex justify-center align-center" style="height: 100vh">
-        <v-form class="pa-4 w-50 w-auto" >
+    <v-container fluid class="d-flex justify-center align-center" style="min-height: 100vh;">
+        <v-row justify="center">
+        <v-col cols="12" sm="8" md="6" lg="4">
+            <v-form class="pa-4" @submit.prevent="login">
 
             <h2 class="text-center text-h4 mb-4">Login</h2>
 
-            <p class="text-center mb-4">Porfavor ingresa tus credenciales para ingresar.</p>
+            <p class="text-center mb-4">Por favor ingresa tus credenciales para ingresar.</p>
 
             <!-- Usuario -->
             <v-text-field
@@ -32,12 +34,12 @@
             ></v-text-field>
 
             <div class="d-flex justify-end mt-4">
-
-                <v-btn @click="login()" block color="success">Login</v-btn>
-
+                <v-btn block color="success" @click="login">Login</v-btn>
             </div>
 
-        </v-form>
+            </v-form>
+        </v-col>
+        </v-row>
     </v-container>
 </template>
 

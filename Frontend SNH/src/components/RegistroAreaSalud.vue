@@ -1,66 +1,67 @@
 <template>
-    <v-container class="d-flex justify-center align-center">
-        <v-form class="pa-4 w-50 w-auto" >
-
-            <h2 class="text-center text-h4 mb-4 w-full">Centro de Salud</h2>
-
-            <p class="text-center mb-4">Porfavor ingresa los datos del centro de salud.</p>
-
-            <!-- Nombre  -->
-            <v-text-field
-                class="mt-4"
-                v-model="centerName"
-                clearable
-                label="Nombre del Centro de Salud"
-                required
-                color="text"
-                :error-messages="centerNameError"
-                prepend-icon="mdi-hospital-building"
-            ></v-text-field>
-
-            <!-- Dirección -->
-            <v-text-field
-                class="mt-4"
-                v-model="centerAdress"
-                clearable
-                label="Dirección del Centro de Salud"
-                required
-                color="text"
-                :error-messages="centerAdressError"
-                prepend-icon="mdi-directions"
-            ></v-text-field>
-
-            <!-- Teléfono -->
-            <v-text-field
-                class="mt-4"
-                v-model="centerPhone"
-                clearable
-                label="Teléfono del Centro de Salud"
-                required
-                color="text"
-                :error-messages="centerPhoneError"
-                prepend-icon="mdi-phone"
-            ></v-text-field>
-
-            <!-- Email -->
-            <v-text-field
-                class="mt-4"
-                v-model="centerEmail"
-                clearable
-                label="Email del Centro de Salud"
-                required
-                color="text"
-                :error-messages="centerEmailError"
-                prepend-icon="mdi-email"
-            ></v-text-field>
-
-            <div class="d-flex justify-end mt-4">
-
-                <v-btn @click="registro()" block color="success">Registrar</v-btn>
-
-            </div>
-
-        </v-form>
+    <v-container fluid class="d-flex justify-center align-center" style="min-height: 100vh;">
+        <v-row justify="center">
+            <v-col cols="12" sm="8" md="6" lg="4">
+                <v-form class="pa-4">
+        
+                    <h2 class="text-center text-h4 mb-4 w-full">Centro de Salud</h2>
+        
+                    <p class="text-center mb-4">Porfavor ingresa los datos del centro de salud.</p>
+        
+                    <!-- Nombre  -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="centerName"
+                        clearable
+                        label="Nombre del Centro de Salud"
+                        required
+                        color="text"
+                        :error-messages="centerNameError"
+                        prepend-icon="mdi-hospital-building"
+                    ></v-text-field>
+        
+                    <!-- Dirección -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="centerAdress"
+                        clearable
+                        label="Dirección del Centro de Salud"
+                        required
+                        color="text"
+                        :error-messages="centerAdressError"
+                        prepend-icon="mdi-directions"
+                    ></v-text-field>
+        
+                    <!-- Teléfono -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="centerPhone"
+                        clearable
+                        label="Teléfono del Centro de Salud"
+                        required
+                        color="text"
+                        :error-messages="centerPhoneError"
+                        prepend-icon="mdi-phone"
+                    ></v-text-field>
+        
+                    <!-- Email -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="centerEmail"
+                        clearable
+                        label="Email del Centro de Salud"
+                        required
+                        color="text"
+                        :error-messages="centerEmailError"
+                        prepend-icon="mdi-email"
+                    ></v-text-field>
+        
+                    <div class="d-flex justify-end mt-4">
+                        <v-btn @click="registro()" block color="success">Registrar</v-btn>
+                    </div>
+                </v-form>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
