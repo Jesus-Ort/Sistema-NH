@@ -34,7 +34,12 @@
             ></v-text-field>
 
             <div class="d-flex justify-end mt-4">
-                <v-btn block color="success" @click="login">Login</v-btn>
+                <v-btn
+                :loading="loading"
+                :disabled="loading"
+                block
+                color="success" 
+                @click="login">Login</v-btn>
             </div>
 
             </v-form>
@@ -47,8 +52,10 @@
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
 const router = useRouter()
+const loading = ref(false)
 
 // Validaciones
 const { handleSubmit } = useForm({
@@ -63,15 +70,20 @@ const {value: username, errorMessage: usernameError} = useField("username")
 const {value: password, errorMessage: passwordError} = useField("password")
 
 // Envio
-const login = handleSubmit((values) => {
-    // Funcionalidad backend
-    console.log('Formulario enviado con los siguientes datos:', values);
+const login = handleSubmit(async (values) => {
+    try {
+        loading.value = true
+        console.log('Formulario enviado con los siguientes datos:', values)
 
-    router.push('/')  
-}); 
+        // Simular llamada a API
+        await new Promise(resolve => setTimeout(resolve, 2000))
 
-
-
-
-
+        // Redirigir al home
+        router.push('/')
+    } catch (error) {
+        console.error('Error en login:', error)
+    } finally {
+        loading.value = false
+    }
+})
 </script>
