@@ -136,7 +136,7 @@
 import { ref, onMounted, computed } from 'vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { useDarkMode } from '@/composables/useDarkMode'
-import axios from 'axios'
+import axios from '@/services/axios';
 import { useSnackbar } from '@/composables/useSnackbar'
 
 const $snackbar = useSnackbar()
@@ -148,7 +148,6 @@ const mostrarDialogo = ref(false)
 const vacunaBorrar = ref({})
 const form = ref({
     id: null,
-    vacuna: '',
     paciente: '',
     fecha: '',
     dosis: '',
@@ -165,7 +164,6 @@ const headers = [
     { title: 'Acciones', value: 'acciones', sortable: false }
 ]
 
-onMounted(() => obtenerVacunas())
 
 const obtenerVacunas = async () => {
     try {
@@ -190,6 +188,9 @@ const obtenerVacunas = async () => {
     }
 }
 
+onMounted(() => obtenerVacunas())
+
+
 const abrirModal = (item) => {
     form.value = { ...item }
     modal.value = true
@@ -199,23 +200,33 @@ const guardarCambios = async () => {
     try {
         loading.value = true
         if (form.value.raw?.id) {
-        // Solo actualizamos el campo necesario, aquí un ejemplo básico
-        await axios.put(`/api/v1/applied-doses/${form.value.raw.id}`, {
-            doseNumber: form.value.dosis,
-            applicationDateTime: form.value.fecha, 
-            // puedes agregar más campos aquí si tu API lo permite
-        })
-        $snackbar.success('Vacuna actualizada correctamente')
+        const data = {
+            doseNumber: Number(form.value.dosis),
+            applicationDateTime: form.value.fecha 
+                ? `${form.value.fecha}T00:00:00.000Z`
+                : form.value.raw.applicationDateTime,
+            patientId: form.value.raw.patientId,
+            vaccineBatchId: form.value.raw.vaccineBatchId,
+            vaccinationCenterId: form.value.raw.vaccinationCenterId,
+            applyingUserId: form.value.raw.applyingUserId
+        }
+
+            console.log('👉 Enviando al backend:', data)
+
+            await axios.patch(`/api/v1/applied-doses/${form.value.raw.id}`, data)
+            $snackbar.success('Vacuna actualizada correctamente')
         }
         modal.value = false
         obtenerVacunas()
     } catch (error) {
         const msg = error.response?.data?.message || 'Error inesperado al guardar los cambios'
         $snackbar.error(`Algo salió mal: ${msg}`)
+        console.error('❌ Detalle del error:', error.response || error)
     } finally {
         loading.value = false
     }
 }
+
 
 const prepararEliminacion = (item) => {
     vacunaBorrar.value = item
