@@ -13,7 +13,12 @@
                     <v-autocomplete
                         class="mt-4"
                         v-model="paciente"
-                        :items="['Paciente 1', 'Paciente 2', 'Paciente 3']"
+                        :items="pacientes"
+                        :loading="loadingAll"
+                        :disabled="loadingAll"
+                        :item-title="pacienteLabel"
+                        :item-value="'id'"
+                        return-id 
                         label="C.I del Paciente"
                         color="text"
                         required
@@ -26,12 +31,18 @@
                     <v-autocomplete
                         class="mt-4"
                         v-model="lote"
-                        :items="['Lote 1', 'Lote 2', 'Lote 3']"
+                        :items="lotes"
+                        :loading="loadingAll"
+                        :disabled="loadingAll"
+                        item-title="batchNumber"
+                        :item-value="'id'"
+                        :rules="[val => !!val || 'Debe seleccionar un lote válido']"
+                        return-id
                         label="Numero del Lote"
                         color="text"
                         required
                         :error-messages="loteError"
-                        prepend-icon="mdi-package">
+                        prepend-icon="mdi-package-variant">
                     </v-autocomplete>
         
                     <!-- Numero de dosis -->
@@ -47,43 +58,42 @@
                         control-variant="hidden"
                     ></v-number-input>
         
-                    <!--  Fecha de aplicacion de la dosis  -->
-                    <v-text-field
-                        class="mt-4"
-                        v-model="aplicationDate"
-                        clearable
-                        label="Fecha de aplicacion de la dosis"
-                        type="date"
-                        color="text"
-                        required
-                        :error-messages="aplicationDateError"
-                        prepend-icon="mdi-calendar">
-                    </v-text-field>
-        
                     <!-- Buscado por nombre, agregado como array, devolver ID  -->
                     <!-- Centro de Salud -->
-                    <v-autocomplete
+                    <v-select
                         class="mt-4"
-                        v-model="center"
-                        :items="['Centro de Salud 1', 'Centro de Salud 2', 'Centro de Salud 3']"
+                        v-model="vaccinationCenterId"
+                        :items="centrosSalud"
+                        item-title="centerName"
+                        :item-value="'id'"
+                        :loading="loadingAll"
+                        :disabled="loadingAll"
+                        :rules="[val => !!val || 'Debe seleccionar un centro de salud válido']"
+                        return-id
                         label="Centro de Salud"
                         color="text"
-                        required
-                        :error-messages="centerError"
+                        :error-messages="vaccinationCenterIdError"
                         prepend-icon="mdi-hospital-building">
-                    </v-autocomplete>
-        
-                    <!-- Nombre del profesional de salud que aplicó la dosis -->
-                    <v-text-field
+                    </v-select>
+
+                    <!-- Buscado por nombre, agregado como array, devolver ID  -->
+                    <!-- Nombre del profesional de salud que aplicó la dosis -->                  
+                    <v-autocomplete
                         class="mt-4"
                         v-model="healthProfessional"
-                        clearable
+                        :items="usuarios"
+                        :item-title="salud"
+                        :item-value="'id'"
+                        :loading="loadingAll"
+                        :disabled="loadingAll"
+                        :rules="[val => !!val || 'Debe seleccionar un profesional de salud válido']"
+                        return-id
                         label="Nombre de quién aplicó la dosis"
                         required
                         color="text"
                         :error-messages="healthProfessionalError"
                         prepend-icon="mdi-stethoscope"
-                    ></v-text-field>
+                    ></v-autocomplete>
         
                     <!-- Observaciones -->
                     <v-text-field
@@ -98,7 +108,12 @@
                     ></v-text-field>
         
                     <div class="d-flex justify-end mt-4">
-                        <v-btn @click="registro()" block color="success">Registrar</v-btn>
+                        <v-btn 
+                        @click="registro()"
+                        :loading="loadingButton"
+                        :disabled="loadingButton" 
+                        block 
+                        color="success">Registrar</v-btn>
                     </div>
                 </v-form>
             </v-col>
@@ -108,17 +123,44 @@
 
 <script setup>
 import { useForm, useField } from 'vee-validate'
+import { ref, onMounted } from 'vue'
+import axios from '@/services/axios';
 import * as yup from 'yup'
+import { useSnackbar } from '@/composables/useSnackbar'
 
-// Propiedad para formulario en pasos (si es necesaria)
-const props = defineProps({
-    multistep: {
-    type: Boolean,
-    default: false
+const $snackbar = useSnackbar()
+
+const loadingButton = ref(false)
+const centrosSalud = ref([]);
+const lotes = ref([]);
+const pacientes = ref([]);
+const usuarios = ref([]);
+const loadingAll = ref(false);
+
+onMounted(async () => {
+    try {
+        loadingAll.value = true;
+
+    const [centrosResp, lotesResp, pacientesResp, usersResp] = await Promise.all([
+        axios.get('/api/v1/vaccination-centers'),
+        axios.get('/api/v1/vaccine-batches'),
+        axios.get('/api/v1/patients'),
+        axios.get('/api/v1/users')
+        ]);
+
+        // Asignamos las respuestas a sus refs
+        centrosSalud.value = centrosResp.data;
+        lotes.value = lotesResp.data;
+        pacientes.value = pacientesResp.data;
+        usuarios.value = usersResp.data;
+
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Error inesperado al cargar los datos';
+        $snackbar.error(`Algo salió mal: ${msg}`);
+    } finally {
+        loadingAll.value = false;
     }
-})
-
-const emit = defineEmits(['next'])
+    });
 
 // Validaciones
 const { handleSubmit } = useForm({
@@ -126,28 +168,55 @@ const { handleSubmit } = useForm({
         paciente: yup.string().required("El paciente es requerido").min(3,"Debe contener minimo 3 letras"),
         lote: yup.string().required('El número de lote es requerido').min(3,"Debe contener minimo 3 letras"),
         doseNumber: yup.number().required("El número de la dosis aplicada es requerido").min(1,"Debe ser al menos 1 dosis"),
-        aplicationDate: yup.date().typeError('Debe ser una fecha correcta').required("La fecha de aplicacion es requerida").max(new Date(), 'La fecha de aplicacion no puede ser futura'),
-        center: yup.string().required("El centro de salud es requerido").min(3,"Debe contener minimo 3 letras"),
-        healthProfessional: yup.string().required("El Profesional de Salud es requerido").min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
-        observaciones: yup.string().max(1000,"Máximo 1000 letras").min(5,"Minimo 5 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros")
+        vaccinationCenterId: yup.string().required("El centro de salud es requerido"),
+        healthProfessional: yup.string().required("El Profesional de Salud es requerido"),
+        observaciones: yup.string().max(1000,"Máximo 1000 letras").matches(/^[a-zA-Z0-9 _-]+$/, 'Solo pueden ser letras, números y signos ( - _ )')
     })
 }); 
 
 // Manejo de errores
+const {value: doseNumber, errorMessage: doseNumberError} = useField("doseNumber")
+const {value: observaciones, errorMessage: observacionesError} = useField("observaciones")
 const {value: paciente, errorMessage: pacienteError} = useField("paciente")
 const {value: lote, errorMessage: loteError} = useField("lote")
-const {value: doseNumber, errorMessage: doseNumberError} = useField("doseNumber")
-const {value: aplicationDate, errorMessage: aplicationDateError} = useField("aplicationDate")
-const {value: center, errorMessage: centerError} = useField("center")
+const {value: vaccinationCenterId, errorMessage: vaccinationCenterIdError} = useField("vaccinationCenterId")
 const {value: healthProfessional, errorMessage: healthProfessionalError} = useField("healthProfessional")
-const {value: observaciones, errorMessage: observacionesError} = useField("observaciones")
+
+const salud = (item) => {
+    if (!item) return '';
+return `${item.name} ${item.lastname } (${item.email})`
+
+};
+
+const pacienteLabel = (item) => {
+    if (!item) return '';
+
+    if (item.isChild && item.representative && item.representative.identityDocument) {
+    return `${item.firstName} ${item.lastname} - C.I ${item.representative.identityDocument} (Hijo sin C.I)`;
+    }
+
+    return `${item.firstName} ${item.lastname} - C.I ${item.identityDocument}`;
+};
 
 // Envio
-const registro = handleSubmit((values) => {
-    // Funcionalidad backend
-    console.log('Formulario enviado con los siguientes datos:', values);
-    if (props.multistep) {
-        emit('next')
+const registro = handleSubmit( async (values) => {
+    try {
+    loadingButton.value = true;
+    await axios.post('/api/v1/applied-doses', {
+        doseNumber: values.doseNumber,
+        observations: values.observaciones,
+        patientId: values.paciente,
+        vaccineBatchId: values.lote,
+        vaccinationCenterId: values.vaccinationCenterId,
+        applyingUserId: values.healthProfessional
+    });
+
+    $snackbar.success('¡Registro exitoso!');
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Error inesperado al registrarse';
+        $snackbar.error(`Algo salió mal al registrar la dosis: ${msg}`);
+    } finally {
+        loadingButton.value = false;
     }
 }); 
 
