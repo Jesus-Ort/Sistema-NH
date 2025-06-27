@@ -141,7 +141,7 @@
 <script setup>
 import { useForm, useField } from 'vee-validate';
 import * as yup from 'yup';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import axios from '@/services/axios';
 import { useSnackbar } from '@/composables/useSnackbar';
 
@@ -151,18 +151,32 @@ const sinCedula = ref(false);
 const loadingRepresentante = ref(false)
 const representantes = ref([]);
 
-onMounted(async () => {
+watch(sinCedula, (val) => {
+    if (!val) {
+        representativeId.value = null;
+    } else {
+        nationalID.value = '';
+    }
+});
+
+const generarIdentificadorUnicoParaMenor = () => {
+    return `999${Date.now()}${Math.floor(100 + Math.random() * 900)}`;
+}
+
+const cargarRepresentantes = async () => {
     try {
-    loadingRepresentante.value = true;
-    const response = await axios.get('/api/v1/patients');
-    representantes.value = response.data;
+        loadingRepresentante.value = true;
+        const response = await axios.get('/api/v1/patients');
+        representantes.value = response.data;
     } catch (error) {
         const msg = error.response?.data?.message || 'Error inesperado al registrarse';
         $snackbar.error(`Algo salió mal al cargar los representantes: ${msg}`);
     } finally {
-    loadingRepresentante.value = false;
+        loadingRepresentante.value = false;
     }
-});
+}
+
+onMounted(cargarRepresentantes);
 
 const { handleSubmit } = useForm({
     validationSchema: computed(() => {
@@ -229,24 +243,32 @@ const representantesFiltrados = computed(() => {
 
 const registro = handleSubmit(async (values) => {
     try {
-    loading.value = true;
-    await axios.post('/api/v1/patients', {
-        firstName: values.firstName,
-        lastname: values.lastName,
-        dateOfBirth: values.birthDate,
-        address: values.address,
-        mobilePhone: values.phone,
-        email: values.email,
-        identityDocument: sinCedula.value ? values.representativeId : values.nationalID,
-        representativeId: sinCedula.value ? values.representativeId : null,
-        isChild: sinCedula.value
-    });
+        loading.value = true;
 
-    $snackbar.success('¡Registro exitoso!');
+        const identity = sinCedula.value
+            ? generarIdentificadorUnicoParaMenor()
+            : values.nationalID;
+
+        const payload = {
+            firstName: values.firstName,
+            lastname: values.lastName,
+            email: values.email,
+            address: values.address,
+            mobilePhone: values.phone,
+            dateOfBirth: values.birthDate,
+            identityDocument: identity,
+            representativeId: sinCedula.value ? values.representativeId : null,
+            isChild: sinCedula.value
+        };
+
+        await axios.post('/api/v1/patients', payload);
+
+        $snackbar.success('¡Registro exitoso!');
     } catch (error) {
         const msg = error.response?.data?.message || 'Error inesperado al registrarse';
         $snackbar.error(`Algo salió mal al registrar el paciente: ${msg}`);
     } finally {
+        cargarRepresentantes();
         loading.value = false;
     }
 });

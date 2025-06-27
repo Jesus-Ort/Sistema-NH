@@ -1,53 +1,3 @@
-<!--
-    VacunasAplicadas.vue
-
-    Componente Vue para mostrar, buscar, editar y eliminar registros de 
-    vacunas aplicadas a pacientes.
-    Utiliza Vuetify para la interfaz de usuario y un modal de 
-    confirmación personalizado.
-
-    Funcionalidades principales:
-    - Visualización de una tabla de vacunas aplicadas con scroll horizontal en móviles.
-    - Búsqueda dinámica por vacuna, paciente, centro, fecha o dosis.
-    - Edición de registros mediante un modal.
-    - Eliminación de registros con confirmación.
-    - Soporte para modo oscuro mediante un composable.
-    - Datos de ejemplo simulados; preparado para integración con backend.
-
-    Props:
-        Ninguna.
-
-    Variables y estados:
-        - isDark: indica si el modo oscuro está activo.
-        - vacunas: lista reactiva de vacunas aplicadas.
-        - loading: estado de carga de la tabla.
-        - modal: controla la visibilidad del modal de edición.
-        - mostrarDialogo: controla la visibilidad del diálogo de confirmación.
-        - vacunaBorrar: almacena el registro seleccionado para eliminar.
-        - form: modelo reactivo para el formulario de edición.
-        - busqueda: texto de búsqueda ingresado por el usuario.
-        - headers: configuración de columnas de la tabla.
-        - datosFalsos: datos simulados para pruebas.
-
-    Métodos principales:
-        - obtenerVacunas: carga los datos de vacunas (simulado, preparado para backend).
-        - abrirModal: abre el modal de edición con los datos seleccionados.
-        - guardarCambios: guarda los cambios editados en el registro.
-        - prepararEliminacion: prepara el registro para eliminar y muestra el 
-        diálogo de confirmación.
-        - confirmarEliminacion: elimina el registro seleccionado.
-        - normalizar: normaliza texto para búsquedas insensibles a acentos y mayúsculas.
-        - vacunasFiltradas: computed que filtra los registros según el texto de búsqueda.
-
-    Componentes hijos:
-        - ConfirmDialog: diálogo de confirmación reutilizable.
-
-    Uso:
-        Importar y utilizar dentro de una vista o layout principal para gestionar 
-        vacunas aplicadas.
-
--->
-
 <template>
     <v-container fluid>
         <v-row>
@@ -147,8 +97,8 @@
             </v-card-text>
             <v-card-actions>
             <v-spacer />
-            <v-btn text @click="modal = false">Cancelar</v-btn>
-            <v-btn color="primary" @click="guardarCambios">Guardar</v-btn>
+            <v-btn text @click="modal = false" :disabled="loading">Cancelar</v-btn>
+            <v-btn color="primary" @click="guardarCambios" :disabled="loading">Guardar</v-btn>
             </v-card-actions>
         </v-card>
         </v-dialog>
@@ -159,6 +109,7 @@
             title="Confirmar"
             :message="mensajeDialogo"
             @confirm="confirmarEliminacion"
+            :disabled="loading"
             />
     </v-container>
 </template>
@@ -209,7 +160,9 @@ const obtenerVacunas = async () => {
         .map(v => ({
             id: v.id,
             vacuna: v.vaccineBatch?.vaccine?.vaccineName || 'Desconocida',
-            paciente: `${v.patient?.firstName} ${v.patient?.lastname}`.trim() + (v.patient?.isChild ? ' (Hijo)' : ''),
+            paciente: `${v.patient?.firstName} ${v.patient?.lastname}`.trim() + (
+                v.patient?.isChild ? ` (Hijo de: CI ${v.patient.representativeId.identityDocument || 'Desconocido'})` : ''
+            ),
             centro: v.vaccinationCenter?.centerName || 'Desconocido',
             dosis: v.doseNumber,
             fecha: v.applicationDateTime ? v.applicationDateTime.split('T')[0] : 'N/A',
@@ -304,15 +257,19 @@ const guardarCambios = async () => {
                 vaccinationCenterId: form.value.vaccinationCenterId,
                 applyingUserId: form.value.applyingUserId
             }
-            await axios.patch(`/api/v1/applied-doses/${form.value.raw.id}`, data)
+            const response = await axios.patch(`/api/v1/applied-doses/${form.value.raw.id}`, data)
+
+            if (response.data.rolledBack) {
+            $snackbar.warning(response.data.message || 'El sistema revirtió los cambios por seguridad')
+            } else {
             $snackbar.success('Vacuna actualizada correctamente')
+    }
         }
         modal.value = false
         obtenerVacunas()
     } catch (error) {
         const msg = error.response?.data?.message || 'Error inesperado al guardar los cambios'
         $snackbar.error(`Algo salió mal: ${msg}`)
-        console.error('❌ Detalle del error:', error.response || error)
     } finally {
         loading.value = false
     }
@@ -326,8 +283,16 @@ const prepararEliminacion = (item) => {
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
-        await axios.put(`/api/v1/applied-doses/${vacunaBorrar.value.raw.id}`, { isActive: false })
+        const response = await axios.patch(
+        `/api/v1/applied-doses/${vacunaBorrar.value.raw.id}`,
+        { isActive: false }
+        )
+        if (response.data.rolledBack) {
+        $snackbar.warning(response.data.message || 'El sistema revirtió la eliminación por seguridad')
+        } else {
         $snackbar.success('Vacuna eliminada correctamente')
+        }
+
         mostrarDialogo.value = false
         obtenerVacunas()
     } catch (error) {

@@ -76,7 +76,7 @@ const allDrawerItems = [
     title: null,
     items: [
       { label: 'Inicio', icon: 'mdi-home', to: '/inicio', roles: ['administrativo', 'salud'] },
-      { label: 'Reportes', icon: 'mdi-file-chart', to: '/reportes', roles: ['administrativo','salud'] },
+      { label: 'Gestión Vacunas', icon: 'mdi-file-chart', to: '/gestion-vacunas', roles: ['administrativo','salud'] },
     ],
   },
   {

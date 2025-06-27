@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import HomePage from '@/pages/HomePage.vue'
-import ReportesPage from '@/pages/ReportesPage.vue'
+import GestionVacunasPage from '@/pages/GestionVacunas.vue'
 import RegistroAreaSalud from '@/components/RegistroAreaSalud.vue'
 import RegistroDosis from '@/components/RegistroDosis.vue'
 import RegistroFabricantes from '@/components/RegistroFabricantes.vue'
@@ -25,7 +25,7 @@ const routes = [
     children: [
       { path: '', redirect: 'inicio' },
       { path: 'inicio', name: 'Inicio', component: HomePage },
-      { path: 'reportes', name: 'Reportes', component: ReportesPage },
+      { path: 'gestion-vacunas', name: 'Gestion Vacunas', component: GestionVacunasPage },
       { path: 'registro-area-salud', name: 'Centro de Salud', component: RegistroAreaSalud },
       { path: 'registro-dosis', name: 'Dosis', component: RegistroDosis },
       { path: 'registro-fabricantes', name: 'Fabricantes', component: RegistroFabricantes },
