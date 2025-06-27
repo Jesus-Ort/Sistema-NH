@@ -80,6 +80,7 @@
                 background: isDark ? '#23272f' : '#eee',
                 borderRadius: '16px',
                 padding: '16px',
+                textAlign: 'center',
                 minWidth: '600px'  /* <-- Evita que se colapse en pantallas pequeñas */
                 }"
             >
@@ -107,11 +108,41 @@
             <v-card-title>Editar Vacuna</v-card-title>
             <v-card-text>
             <v-form>
-                <v-text-field label="Vacuna" v-model="form.vacuna" />
-                <v-text-field label="Paciente" v-model="form.paciente" />
-                <v-text-field label="Centro" v-model="form.centro" />
-                <v-text-field label="Fecha" v-model="form.fecha" type="date" />
-                <v-text-field label="Dosis" v-model="form.dosis" />
+                <v-select
+                v-model="form.vaccineBatchId"
+                :items="vaccineBatches"
+                item-title="vaccineName"
+                item-value="id"
+                label="Vacuna"
+                />
+
+                <v-select
+                v-model="form.patientId"
+                :items="pacientes"
+                item-title="nombreCompleto"
+                item-value="id"
+                label="Paciente"
+                />
+
+                <v-select
+                v-model="form.vaccinationCenterId"
+                :items="centros"
+                item-title="centerName"
+                item-value="id"
+                label="Centro de Salud"
+                />
+
+                <v-number-input
+                label="Dosis"
+                v-model="form.dosis"
+                type="number"
+                control-variant="hidden"
+                />
+
+                <v-text-field
+                label="Observación"
+                v-model="form.observacion"
+                />
             </v-form>
             </v-card-text>
             <v-card-actions>
@@ -151,9 +182,13 @@ const form = ref({
     paciente: '',
     fecha: '',
     dosis: '',
-    centro: ''
+    centro: '',
+    observacion: ''
 })
 const busqueda = ref('')
+const vaccineBatches = ref([])
+const pacientes = ref([])
+const centros = ref([])
 
 const headers = [
     { title: 'Vacuna', value: 'vacuna' },
@@ -161,9 +196,9 @@ const headers = [
     { title: 'Fecha', value: 'fecha' },
     { title: 'Dosis', value: 'dosis' },
     { title: 'Centro de Salud', value: 'centro' },
+    { title: 'Observación', value: 'observacion', sortable: false },
     { title: 'Acciones', value: 'acciones', sortable: false }
 ]
-
 
 const obtenerVacunas = async () => {
     try {
@@ -174,10 +209,11 @@ const obtenerVacunas = async () => {
         .map(v => ({
             id: v.id,
             vacuna: v.vaccineBatch?.vaccine?.vaccineName || 'Desconocida',
-            paciente: `${v.patient?.firstName || ''} ${v.patient?.lastname || ''}`.trim(),
+            paciente: `${v.patient?.firstName} ${v.patient?.lastname}`.trim() + (v.patient?.isChild ? ' (Hijo)' : ''),
             centro: v.vaccinationCenter?.centerName || 'Desconocido',
             dosis: v.doseNumber,
             fecha: v.applicationDateTime ? v.applicationDateTime.split('T')[0] : 'N/A',
+            observacion: v.observations || '',
             raw: v
         }))
     } catch (error) {
@@ -188,11 +224,71 @@ const obtenerVacunas = async () => {
     }
 }
 
-onMounted(() => obtenerVacunas())
+onMounted(async () => {
+    obtenerVacunas()
+    await cargarVaccineBatches()
+    await cargarPacientes()
+    await cargarCentros()
+})
 
+const cargarVaccineBatches = async () => {
+    try {
+        const res = await axios.get('/api/v1/vaccine-batches')
+        vaccineBatches.value = res.data.map(vb => ({
+            id: vb.id,
+            vaccineName: vb.vaccine.vaccineName + ' (Lote ' + vb.batchNumber + ')'
+        }))
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Error al cargar lotes de vacunas'
+        $snackbar.error(`Algo salió mal al cargar lotes: ${msg}`)
+    }
+}
+
+const cargarPacientes = async () => {
+    try {
+        const res = await axios.get('/api/v1/patients')
+        pacientes.value = res.data.map(p => {
+            let nombreCompleto = `${p.firstName} ${p.lastname}`.trim()
+            if (p.isChild) {
+                const ciPadre = p.representative?.identityDocument || 'Desconocido'
+                nombreCompleto += ` (Hijo de: CI ${ciPadre})`
+            }
+            return {
+                id: p.id,
+                nombreCompleto
+            }
+        })
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Error al cargar pacientes'
+        $snackbar.error(`Algo salió mal al cargar pacientes: ${msg}`)
+    }
+}
+
+const cargarCentros = async () => {
+    try {
+        const res = await axios.get('/api/v1/vaccination-centers')
+        centros.value = res.data
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Error al cargar centros'
+        $snackbar.error(`Algo salió mal al cargar centros: ${msg}`)
+    }
+}
 
 const abrirModal = (item) => {
-    form.value = { ...item }
+    form.value = {
+        id: item.id,
+        dosis: item.dosis,
+        observacion: item.observacion,
+        vacuna: item.vacuna,
+        paciente: item.paciente + (item.raw.patient?.isChild ? ' (Hijo)' : ''),
+        centro: item.centro,
+        fecha: item.fecha,
+        patientId: item.raw.patientId,
+        vaccineBatchId: item.raw.vaccineBatchId,
+        vaccinationCenterId: item.raw.vaccinationCenterId,
+        applyingUserId: item.raw.applyingUserId,
+        raw: item.raw 
+    }
     modal.value = true
 }
 
@@ -200,19 +296,14 @@ const guardarCambios = async () => {
     try {
         loading.value = true
         if (form.value.raw?.id) {
-        const data = {
-            doseNumber: Number(form.value.dosis),
-            applicationDateTime: form.value.fecha 
-                ? `${form.value.fecha}T00:00:00.000Z`
-                : form.value.raw.applicationDateTime,
-            patientId: form.value.raw.patientId,
-            vaccineBatchId: form.value.raw.vaccineBatchId,
-            vaccinationCenterId: form.value.raw.vaccinationCenterId,
-            applyingUserId: form.value.raw.applyingUserId
-        }
-
-            console.log('👉 Enviando al backend:', data)
-
+            const data = {
+                doseNumber: Number(form.value.dosis),
+                observations: form.value.observacion || '',
+                patientId: form.value.patientId,
+                vaccineBatchId: form.value.vaccineBatchId,
+                vaccinationCenterId: form.value.vaccinationCenterId,
+                applyingUserId: form.value.applyingUserId
+            }
             await axios.patch(`/api/v1/applied-doses/${form.value.raw.id}`, data)
             $snackbar.success('Vacuna actualizada correctamente')
         }
@@ -226,7 +317,6 @@ const guardarCambios = async () => {
         loading.value = false
     }
 }
-
 
 const prepararEliminacion = (item) => {
     vacunaBorrar.value = item
