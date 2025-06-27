@@ -171,5 +171,4 @@ const registro = handleSubmit( async (values) => {
         loading.value = false;
     }
 }); 
-
 </script>

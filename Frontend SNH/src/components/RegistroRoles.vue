@@ -49,5 +49,4 @@ const registro = handleSubmit(() => {
     console.log(`este componente no esta siendo utilizado en el backend, 
     pero se puede implementar la funcionalidad de registro de roles aquí`);
 }); 
-
 </script>
