@@ -1,17 +1,3 @@
-<!--
-    DosisAplicadaPage.vue
-
-    Este componente Vue implementa un formulario por pasos para registrar una dosis aplicada.
-    - Muestra un formulario paso a paso usando componentes dinámicos.
-    - Pasos:
-        1. Registro de Paciente (RegistroPacientes.vue)
-        2. Registro de Dosis (RegistroDosis.vue)
-    - Al completar el último paso, se muestra un diálogo (DialogRegistroVacunas.vue) para confirmar o mostrar información adicional.
-    - La ref `step` rastrea el paso actual del formulario.
-    - La ref `showDialog` controla la visibilidad del diálogo.
-    - La función `goToNextStep` avanza el formulario o muestra el diálogo al finalizar, y luego reinicia el paso.
-    - La propiedad computada `currentForm` selecciona dinámicamente el componente de formulario para el paso actual.
--->
 <template>
     <v-container class="text-center">
         <v-responsive>

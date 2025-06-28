@@ -13,6 +13,7 @@ import RegistroUsuarios from '@/components/RegistroUsuarios.vue'
 import RegistroVacunas from '@/components/RegistroVacunas.vue'
 import DosisAplicadaPage from '@/pages/DosisAplicadaPage.vue'
 import LoginComponent from '@/components/LoginComponent.vue'
+import TestPage from '@/pages/TestPage.vue'
 
 const routes = [
   {
@@ -36,6 +37,7 @@ const routes = [
       { path: 'registro-usuarios', name: 'Usuarios', component: RegistroUsuarios },
       { path: 'registro-vacunas', name: 'Vacunas', component: RegistroVacunas },
       { path: 'dosis-aplicada', name: 'Dosis Aplicada', component: DosisAplicadaPage },
+      { path: 'test', name: 'Test', component: TestPage },
     ],
   },
 ]

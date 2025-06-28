@@ -204,9 +204,13 @@ const obtenerVacunas = async () => {
         .map(v => ({
             id: v.id,
             vacuna: v.vaccineBatch?.vaccine?.vaccineName || 'Desconocida',
-            paciente: `${v.patient?.firstName} ${v.patient?.lastname} ${v.patient?.identityDocument}`.trim() + (
-            v.patient?.isChild ? ` (Hijo de: CI ${v.patient?.representative?.identityDocument || 'Desconocido'})` : ''
-            ),
+            paciente: v.patient
+            ? `${v.patient.firstName} ${v.patient.lastname}`.trim() + (
+                v.patient.isChild 
+                    ? ` (Hijo de: CI ${v.patient.representative?.identityDocument || 'Desconocido'})`
+                    : ` CI: ${v.patient.identityDocument || 'N/A'}`
+                )
+            : 'Desconocido',
             centro: v.vaccinationCenter?.centerName || 'Desconocido',
             dosis: v.doseNumber,
             fecha: v.applicationDateTime ? v.applicationDateTime.split('T')[0] : 'N/A',
