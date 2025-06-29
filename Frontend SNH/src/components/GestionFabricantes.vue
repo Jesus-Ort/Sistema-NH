@@ -236,8 +236,8 @@ const guardarCambios = async () => {
     try {
         loading.value = true
         const data = {
-        manufacturerName: form.value.nombre,
-        country: form.value.pais
+        manufacturerName: form.value.manufacturer,
+        countryId: form.value.country
         }
         await axios.patch(`/api/v1/manufacturers/${form.value.id}`, data)
         $snackbar.success('Fabricante actualizado correctamente')
@@ -261,7 +261,7 @@ const prepararEliminacion = (item) => {
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
-        await axios.patch(`/api/v1/manufacturers/${fabricanteBorrar.value.id}`, { isActive: false })
+        await axios.delete(`/api/v1/manufacturers/${fabricanteBorrar.value.id}`)
         $snackbar.success('Fabricante eliminado correctamente')
         mostrarDialogo.value = false
         obtenerFabricantes()

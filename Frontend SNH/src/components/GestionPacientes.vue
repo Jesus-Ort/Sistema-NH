@@ -196,7 +196,7 @@ const schema = yup.object({
     firstName: yup.string().required('El nombre es requerido').min(2, 'Mínimo 2 letras').matches(/^[a-zA-ZñÑ ]+$/, 'Solo letras y espacios'),
     lastname: yup.string().required('El apellido es requerido').min(2, 'Mínimo 2 letras').matches(/^[a-zA-ZñÑ ]+$/, 'Solo letras y espacios'),
     identityDocument: yup.string().required('La cédula es requerida').min(6, 'Mínimo 6 caracteres').matches(/^\d+$/, 'Solo números'),
-    mobilePhone: yup.string().nullable().matches(/^$|^\d{11}$/, 'El teléfono debe tener 11 números'),
+    mobilePhone: yup.string().nullable().required('El teléfono es requerido').min(11, 'Debe contener mínimo 11 números').matches(/^[0-9]+$/, 'Solo pueden ser números'),
     address: yup.string().nullable().min(5, 'Mínimo 5 caracteres').matches(/^[a-zA-Z0-9 _-]+$/, 'Solo pueden ser letras, números y signos ( - _ )'),
     representativeId: yup.string().nullable().when('isChild', {
         is: true,
@@ -337,7 +337,7 @@ const prepararEliminacion = (item) => {
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
-        await axios.patch(`/api/v1/patients/${pacienteBorrar.value.id}`, { isActive: false })
+        await axios.delete(`/api/v1/patients/${pacienteBorrar.value.id}`)
         $snackbar.success('Paciente eliminado correctamente')
         mostrarDialogo.value = false
         obtenerPacientes()

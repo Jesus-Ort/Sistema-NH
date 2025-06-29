@@ -51,16 +51,31 @@
 <script setup>
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
 import axios from '@/services/axios';
 import { useSnackbar } from '@/composables/useSnackbar'
+import { useUserStore } from '@/stores/users.js'
 
 const $snackbar = useSnackbar()
 
-
+const userStore = useUserStore()
 const router = useRouter()
+const route = useRoute()
 const loading = ref(false)
+
+onMounted(() => {
+    if (route.query.reason === 'expired') {
+    // Muestra snackbar de sesión expirada
+    $snackbar.warning('Sesión expirada'); 
+    } else if (route.query.reason === 'invalid') {
+    // Muestra snackbar de token invalido
+    $snackbar.warning('Token inválido');
+    } else if (route.query.reason === 'required') {
+    // Muestra snackbar de necesitas token
+    $snackbar.warning('Necesitas iniciar sesión');
+    }
+});
 
 // Validaciones
 const { handleSubmit } = useForm({
@@ -83,9 +98,13 @@ async function retryLogin(values) {
             password: values.password
         });
 
-        // Guardar el token (asumiendo que el backend lo devuelve como response.data.token)
+        // Guardar el token 
         const token = response.data.token;
         localStorage.setItem('token', token);
+
+        // Guardar el rol del usuario
+        const userRole = response.data.role
+        userStore.setRole(userRole)
 
         $snackbar.success('Reintento exitoso')
         router.push('/inicio')
@@ -106,9 +125,12 @@ const login = handleSubmit(async (values) => {
             password: values.password
         });
 
-        // Guardar el token (asumiendo que el backend lo devuelve como response.data.token)
         const token = response.data.token;
-        localStorage.setItem('token', token);
+        const role = response.data.role
+        
+        // Guardamos en el store
+        userStore.setToken(token)
+        userStore.setRole(role)
 
         $snackbar.success('Login exitoso')
         // Redirigir al inicio

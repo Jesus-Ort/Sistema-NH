@@ -2,6 +2,11 @@
     <v-container fluid>
         <v-row>
         <v-col cols="12">
+            <div class="mb-8">
+            <h3 class="mb-4">Gestion de Dosis:</h3>
+            <p>En esta sección podrás gestionar las Dosis aplicadas a los pacientes.</p>
+            <p>Podrás ver, editar y eliminar las Dosis aplicadas.</p>
+            </div>
             <!-- Campo de búsqueda -->
             <v-text-field
             v-model="busqueda"
@@ -21,9 +26,9 @@
             <div style="overflow-x: auto;">
             <v-data-table
                 :headers="headers"
-                :items="vacunasFiltradas"
+                :items="dosisFiltradas"
                 :loading="loading"
-                loading-text="Cargando vacunas..."
+                loading-text="Cargando Dosis..."
                 class="elevation-1"
                 :items-per-page-text="'Ítems por páginas'"
                 :style="{
@@ -34,6 +39,7 @@
                 minWidth: '600px'  
                 }"
             >
+            <!-- Botones Tabla -->
                 <template #item.acciones="{ item }">
                 <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
                     <v-icon class="text-white">mdi-pencil</v-icon>
@@ -55,39 +61,66 @@
         <!-- Modal de edición -->
         <v-dialog v-model="modal" max-width="90%">
         <v-card>
-            <v-card-title>Editar Vacuna</v-card-title>
+            <v-card-title>Editar Dosis</v-card-title>
             <v-card-text>
             <v-form @submit.prevent="guardarCambios" ref="formRef" v-slot="{ validate }">
+                <!-- Dosis -->
                 <v-select
                 v-model="form.vaccineBatchId"
                 :items="vaccineBatches"
                 item-title="vaccineName"
                 item-value="id"
-                label="Vacuna"
+                label="Vacuna y Lote"
+                :loading="loadingLotes"
+                :disabled="loadingLotes"
+                color="text"
                 :error-messages="errors.vaccineBatchId"
                 @blur="validateField('vaccineBatchId')"
                 />
 
+                <!-- Paciente -->
                 <v-select
                 v-model="form.patientId"
                 :items="pacientes"
                 item-title="nombreCompleto"
                 item-value="id"
                 label="Paciente"
+                :loading="loadingPacientes"
+                :disabled="loadingPacientes"
+                color="text"
                 :error-messages="errors.patientId"
                 @blur="validateField('patientId')"
                 />
 
+                <!-- Personal de salud que aplicó la dosis -->
+                <v-select
+                v-model="form.applyingUserId"
+                :items="personal"
+                item-title="nombreCompleto"
+                item-value="id"
+                label="Personal que aplicó la dosis"
+                :loading="loadingPersonal"
+                :disabled="loadingPersonal"
+                color="text"
+                :error-messages="errors.applyingUserId"
+                @blur="validateField('patientId')"
+                />
+
+                <!-- Centro de Salud -->
                 <v-select
                 v-model="form.vaccinationCenterId"
                 :items="centros"
                 item-title="centerName"
                 item-value="id"
                 label="Centro de Salud"
+                :loading="loadingCentros"
+                :disabled="loadingCentros"
+                color="text"
                 :error-messages="errors.vaccinationCenterId"
                 @blur="validateField('vaccinationCenterId')"
                 />
 
+                <!-- Número de la dosis -->
                 <v-number-input
                 label="Dosis"
                 v-model="form.dosis"
@@ -97,6 +130,7 @@
                 @blur="validateField('dosis')"
                 />
 
+                <!-- Observación -->
                 <v-text-field
                 label="Observación"
                 v-model="form.observacion"
@@ -105,15 +139,15 @@
                 />
             </v-form>
             </v-card-text>
+            <!-- Botones Modal -->
             <v-card-actions>
             <v-spacer />
             <v-btn text @click="modal = false" :disabled="loading">Cancelar</v-btn>
-            <v-btn color="primary" @click="guardarCambios" :disabled="loading">Guardar</v-btn>
+            <v-btn color="text" @click="guardarCambios" :disabled="loading">Guardar</v-btn>
             </v-card-actions>
         </v-card>
         </v-dialog>
 
-        <!-- Modal de Confirmación -->
         <ConfirmDialog
         v-model="mostrarDialogo"
         title="Confirmar"
@@ -134,11 +168,15 @@ import { useSnackbar } from '@/composables/useSnackbar'
 
 const $snackbar = useSnackbar()
 const { isDark } = useDarkMode()
-const vacunas = ref([])
+const dosis = ref([])
 const loading = ref(true)
+const loadingLotes = ref(true)
+const loadingPacientes = ref(true)
+const loadingCentros = ref(true)
+const loadingPersonal = ref(true)
 const modal = ref(false)
 const mostrarDialogo = ref(false)
-const vacunaBorrar = ref({})
+const dosisBorrar = ref({})
 const form = reactive({
     id: null,
     dosis: null,
@@ -159,10 +197,13 @@ const busqueda = ref('')
 const vaccineBatches = ref([])
 const pacientes = ref([])
 const centros = ref([])
+const personal = ref([])
 
+// Titulos de la Tabla
 const headers = [
     { title: 'Vacuna', value: 'vacuna', align: 'center' },
     { title: 'Paciente', value: 'paciente', align: 'center' },
+    { title: 'Personal De Salud', value: 'personal', align: 'center' },
     { title: 'Fecha', value: 'fecha', align: 'center' },
     { title: 'Dosis', value: 'dosis', align: 'center' },
     { title: 'Centro de Salud', value: 'centro', align: 'center' },
@@ -182,24 +223,27 @@ const schema = yup.object({
     observacion: yup.string().notRequired()
 })
 
+// Normalizar texto de la tabla
 const normalizar = (str) => str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
-const vacunasFiltradas = computed(() => {
+const dosisFiltradas = computed(() => {
     const texto = normalizar(busqueda.value)
-    return vacunas.value.filter(v => (
+    return dosis.value.filter(v => (
         normalizar(v.vacuna || '').includes(texto) ||
         normalizar(v.paciente || '').includes(texto) ||
+        normalizar(v.personal || '').includes(texto) ||
         normalizar(v.centro || '').includes(texto) ||
         normalizar(v.fecha || '').includes(texto) ||
         normalizar(String(v.dosis || '')).includes(texto)
     ))
 })
 
-const obtenerVacunas = async () => {
+// Obtener las Dosis aplicadas
+const obtenerDosis = async () => {
     try {
         loading.value = true
         const response = await axios.get('/api/v1/applied-doses')
-        vacunas.value = response.data
+        dosis.value = response.data
         .filter(v => v.isActive !== false)
         .map(v => ({
             id: v.id,
@@ -211,6 +255,7 @@ const obtenerVacunas = async () => {
                     : ` CI: ${v.patient.identityDocument || 'N/A'}`
                 )
             : 'Desconocido',
+            personal:v.applyingUser ? `${v.applyingUser.name} ${v.applyingUser.lastname}` + ` Correo: ${v.applyingUser.email}`: 'N/A',
             centro: v.vaccinationCenter?.centerName || 'Desconocido',
             dosis: v.doseNumber,
             fecha: v.applicationDateTime ? v.applicationDateTime.split('T')[0] : 'N/A',
@@ -218,22 +263,22 @@ const obtenerVacunas = async () => {
             raw: v
         }))
     } catch (error) {
-        const msg = error.response?.data?.message || 'Error inesperado al cargar las vacunas'
-        $snackbar.error(`Algo salió mal al cargar las vacunas: ${msg}`)
+        const msg = error.response?.data?.message || 'Error inesperado al cargar las Dosis'
+        $snackbar.error(`Algo salió mal al cargar las Dosis: ${msg}`)
     } finally {
         loading.value = false
     }
 }
 
+// Al montarse el componente se cargan las vacunas, lotes, pacientes y centros
 onMounted(async () => {
-    obtenerVacunas()
-    await cargarVaccineBatches()
-    await cargarPacientes()
-    await cargarCentros()
+    obtenerDosis()
 })
 
+// Cargar Lotes
 const cargarVaccineBatches = async () => {
     try {
+        loadingLotes.value = true
         const res = await axios.get('/api/v1/vaccine-batches')
         vaccineBatches.value = res.data.map(vb => ({
         id: vb.id,
@@ -242,11 +287,15 @@ const cargarVaccineBatches = async () => {
     } catch (error) {
         const msg = error.response?.data?.message || 'Error al cargar lotes de vacunas'
         $snackbar.error(`Algo salió mal al cargar lotes: ${msg}`)
+    } finally{
+        loadingLotes.value = false
     }
 }
 
+// Cargar Pacientes
 const cargarPacientes = async () => {
     try {
+        loadingPacientes.value = true
         const res = await axios.get('/api/v1/patients')
         pacientes.value = res.data.map(p => {
         let nombreCompleto = `${p.firstName} ${p.lastname}`.trim()
@@ -262,19 +311,46 @@ const cargarPacientes = async () => {
     } catch (error) {
         const msg = error.response?.data?.message || 'Error al cargar pacientes'
         $snackbar.error(`Algo salió mal al cargar pacientes: ${msg}`)
+    } finally{
+        loadingPacientes.value = false
     }
 }
 
+// Cargar Centros de Salud
 const cargarCentros = async () => {
     try {
+        loadingCentros.value = true
         const res = await axios.get('/api/v1/vaccination-centers')
         centros.value = res.data
     } catch (error) {
-        const msg = error.response?.data?.message || 'Error al cargar centros'
-        $snackbar.error(`Algo salió mal al cargar centros: ${msg}`)
+        const msg = error.response?.data?.message || 'Error al cargar los Centros de Salud'
+        $snackbar.error(`Algo salió mal al cargar los Centros de Salud: ${msg}`)
+    } finally{
+        loadingCentros.value = false
     }
 }
 
+// Cargar personal (usuarios)
+const cargarPersonal = async () => {
+    try {
+        loadingPersonal.value = true
+        const res = await axios.get('/api/v1/users')
+        personal.value = res.data.map(p => {
+        let nombreCompleto = `${p.name} ${p.lastname}`.trim() + ` Correo: ${p.email}` 
+        return {
+            id: p.id,
+            nombreCompleto
+        }
+        })
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Error al cargar el Personal de Salud'
+        $snackbar.error(`Algo salió mal al cargar el Personal de Salud: ${msg}`)
+    } finally{
+        loadingPersonal.value = false
+    }
+}
+
+// Modal
 const abrirModal = (item) => {
     form.id = item.id
     form.dosis = item.dosis
@@ -287,7 +363,12 @@ const abrirModal = (item) => {
     // Limpiar errores
     Object.keys(errors).forEach(key => errors[key] = null)
 
-    modal.value = true
+    modal.value = 
+    // Cargar datos: lote, pacientes, centros, personal
+    cargarVaccineBatches()
+    cargarPacientes()
+    cargarCentros()
+    cargarPersonal()
 }
 
 const validateField = async (field) => {
@@ -299,6 +380,7 @@ const validateField = async (field) => {
     }
 }
 
+// Validar el formulario 
 const validarFormulario = async () => {
     try {
         await schema.validate(form, { abortEarly: false })
@@ -312,6 +394,7 @@ const validarFormulario = async () => {
     }
 }
 
+// Guardar cambios 
 const guardarCambios = async () => {
     if (!(await validarFormulario())) return
 
@@ -335,7 +418,7 @@ const guardarCambios = async () => {
         }
         }
         modal.value = false
-        obtenerVacunas()
+        obtenerDosis()
     } catch (error) {
         const msg = error.response?.data?.message || 'Error inesperado al guardar los cambios'
         $snackbar.error(`Algo salió mal: ${msg}`)
@@ -344,37 +427,37 @@ const guardarCambios = async () => {
     }
 }
 
+// Prepara la eliminacion
 const prepararEliminacion = (item) => {
-    vacunaBorrar.value = item
+    dosisBorrar.value = item
     mostrarDialogo.value = true
 }
 
+// Luego de consultar si desea borrar, se confirma
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
         const response = await axios.patch(
-        `/api/v1/applied-doses/${vacunaBorrar.value.raw.id}`,
-        { isActive: false }
-        )
+        `/api/v1/applied-doses/cancel/${dosisBorrar.value.raw.id}`)
         if (response.data.rolledBack) {
         $snackbar.warning(response.data.message || 'El sistema revirtió la eliminación por seguridad')
         } else {
-        $snackbar.success('Vacuna eliminada correctamente')
+        $snackbar.success('Dosis eliminada correctamente')
         }
 
         mostrarDialogo.value = false
-        obtenerVacunas()
+        obtenerDosis()
     } catch (error) {
-        const msg = error.response?.data?.message || 'Error inesperado al eliminar la vacuna'
+        const msg = error.response?.data?.message || 'Error inesperado al eliminar la Dosis'
         $snackbar.error(`Algo salió mal: ${msg}`)
     } finally {
         loading.value = false
     }
 }
-
+// Mensaje del dialogo donde pregunta si desea borrar
 const mensajeDialogo = computed(() => {
-    return vacunaBorrar.value?.paciente
-        ? `¿Deseas borrar la vacuna aplicada a ${vacunaBorrar.value.paciente}?`
-        : '¿Deseas borrar esta vacuna?'
+    return dosisBorrar.value?.paciente
+        ? `¿Deseas borrar la Dosis aplicada a ${dosisBorrar.value.paciente}?`
+        : '¿Deseas borrar esta Dosis?'
 })
 </script>

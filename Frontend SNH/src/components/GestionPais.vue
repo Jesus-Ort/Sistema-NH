@@ -216,7 +216,7 @@ const prepararEliminacion = (item) => {
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
-        await axios.patch(`/api/v1/countries/${paisBorrar.value.id}`, { isActive: false })
+        await axios.delete(`/api/v1/countries/${paisBorrar.value.id}`)
         $snackbar.success('País eliminado correctamente')
         mostrarDialogo.value = false
         obtenerPaises()

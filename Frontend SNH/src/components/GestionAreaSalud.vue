@@ -288,7 +288,7 @@ const prepararEliminacion = (item) => {
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
-        await axios.patch(`/api/v1/vaccination-centers/${areaSaludBorrar.value.id}`, { isActive: false })
+        await axios.delete(`/api/v1/vaccination-centers/${areaSaludBorrar.value.id}`)
         $snackbar.success('Area de Salud eliminada correctamente')
         mostrarDialogo.value = false
         obtenerAreas()

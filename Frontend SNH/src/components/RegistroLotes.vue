@@ -132,8 +132,8 @@ onMounted(async () => {
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
         batchNumber: yup.string().typeError('El número de lote debe ser un número válido').required('El número del lote es obligatorio').min(1, "Debe ser al menos 1").matches(/^[0-9]+$/, 'Solo pueden ser números'),
-        manufactureDate: yup.date().required('La fecha de fabricación es obligatoria').max(new Date(), 'La fecha de fabricación no puede ser futura'),
-        expirationDate: yup.date().required('La fecha de vencimiento es obligatoria').min(new Date(), 'La fecha de vencimiento no puede ser pasada'),
+        manufactureDate: yup.date().typeError('Debe ser una fecha valida').required('La fecha de fabricación es obligatoria').max(new Date(), 'La fecha de fabricación no puede ser futura'),
+        expirationDate: yup.date().typeError('Debe ser una fecha valida').required('La fecha de vencimiento es obligatoria').min(new Date(), 'La fecha de vencimiento no puede ser pasada'),
         initialQuantity: yup.number().required('La cantidad inicial es obligatoria').min(1,"Debe ser al menos 1"),
         availableQuantity: yup.number().required('La cantidad disponible es obligatoria').min(1,"Debe ser al menos 1"),
         vaccine: yup.string().required('La vacuna es requerida'),
