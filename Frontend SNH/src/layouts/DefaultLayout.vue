@@ -81,7 +81,7 @@ const allDrawerItems = [
   {
     title: 'Gestión Administrativa',
     items: [
-      { label: 'Areas de Salud', icon: 'mdi-file-chart', to: '/area-salud', roles: ['admin',] },
+      { label: 'Areas de Salud', icon: 'mdi-file-chart', to: '/area-salud', roles: ['admin', ] },
       { label: 'Dosis', icon: 'mdi-file-chart', to: '/dosis', roles: ['admin','salud'] },
       { label: 'Fabricantes', icon: 'mdi-file-chart', to: '/fabricantes', roles: ['admin',] },
       { label: 'Lotes', icon: 'mdi-file-chart', to: '/lotes', roles: ['admin',] },

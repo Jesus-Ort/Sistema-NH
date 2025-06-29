@@ -3,9 +3,9 @@ import { defineStore } from 'pinia'
 export const useUserStore = defineStore('user', {
     state: () => ({
         token: localStorage.getItem('token') || null,  // Token persistido
-        role: null                                     // Rol actual
+        role: localStorage.getItem('role') || null,     // Rol actual
     }),
-
+        
     actions: {
         /**
          * Guarda el token y lo persiste en localStorage
@@ -17,6 +17,7 @@ export const useUserStore = defineStore('user', {
 
         setRole(role) {
         this.role = role
+        localStorage.setItem('role', role)
         },
 
         /**
@@ -26,6 +27,7 @@ export const useUserStore = defineStore('user', {
         this.token = null
         this.role = null
         localStorage.removeItem('token')
+        localStorage.removeItem('role')
         }
     }
 })

@@ -39,7 +39,7 @@ const routes = [
         path: 'dosis',
         name: 'Dosis',
         component: PageDosis,
-        meta: { requiresAuth: true, roles: ['admin', 'health'] }
+        meta: { requiresAuth: true, roles: ['admin',] }
       },
       {
         path: 'area-salud',
@@ -86,54 +86,46 @@ const router = createRouter({
   routes
 })
 
-/**
- * Guard global de navegación:
- * - Verifica token presente y válido
- * - Verifica expiración del token
- * - Verifica permisos por rol según meta.roles
- * - Redirige según corresponda
- */
+
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
   const token = localStorage.getItem('token')
 
-  // Si la ruta requiere autenticación y no hay token, lo mandamos al login
+  // Si requiere auth y no hay token → al login
   if (to.meta.requiresAuth && !token) {
     return next({ path: '/login', query: { reason: 'required' } })
   }
 
+  // Si hay token, validamos expiración
   if (token) {
     try {
-      // Decodificamos el token
       const decoded = jwtDecode(token)
       const currentTime = Date.now() / 1000
 
-      // Verificamos expiración
       if (decoded.exp && decoded.exp < currentTime) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('role')
         userStore.logout()
         return next({ path: '/login', query: { reason: 'expired' } })
       }
-
     } catch {
-      // Token inválido (no decodificable)
+      localStorage.removeItem('token')
+      localStorage.removeItem('role')
       userStore.logout()
       return next({ path: '/login', query: { reason: 'invalid' } })
     }
   }
 
-  // Si está logueado y quiere ir al login, lo mandamos al inicio
-  if (to.path === '/login' && token) {
-    return next('/inicio')
+  // Si la ruta tiene roles definidos, validamos el rol
+  if (to.meta.roles) {
+    if (!to.meta.roles.includes(userStore.role)) {
+      return next('/forbidden')
+    }
   }
 
-  // Si la ruta tiene roles definidos, validamos
-  if (to.meta.roles && !to.meta.roles.includes(userStore.role)) {
-    // No tiene permisos: lo mandamos al inicio o a un 403 si prefieres
-    return next('/forbidden') // Si usas una página 403
-  }
-
-  // Si todo bien, continuamos
+  // Si todo bien, sigue
   next()
 })
+
 
 export default router
