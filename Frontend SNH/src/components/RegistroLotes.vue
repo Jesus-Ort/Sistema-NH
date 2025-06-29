@@ -114,6 +114,7 @@ const vacunas = ref([]);
 const loading = ref(false)
 const loadingVacunas = ref(false)
 
+// Al cargar el componente se cargan las vacunas
 onMounted(async () => {
     try {
     loadingVacunas.value = true;

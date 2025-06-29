@@ -36,11 +36,12 @@
                 minWidth: '600px'
                 }"
             >
+            <!-- Botones Tabla -->
                 <template #item.acciones="{ item }">
-                <v-btn icon color="warning" @click="abrirModal(item)">
+                <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
                     <v-icon class="text-white">mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon color="error" @click="prepararEliminacion(item)">
+                <v-btn icon color="error" class="mb-1 mt-1" @click="prepararEliminacion(item)">
                     <v-icon class="text-white">mdi-delete</v-icon>
                 </v-btn>
                 </template>
@@ -177,6 +178,7 @@ const schema = yup.object({
         temperature: yup.string().required('Los requisitos son obligatorios').min(5,'Debe contener minimo 5 letras').matches(/^[a-zA-Z0-9 +\-°]+$/,"Solo pueden ser letras, numeros y signos (+ - °) sin tildes")
 })
 
+// Valida para guardar correctamente 
 const validarYGuardar = async () => {
     try {
         await schema.validate(form.value, { abortEarly: false })
@@ -205,6 +207,7 @@ watch(form, async (nuevo) => {
     }
 }, { deep: true })
 
+// Titulos en la tabla
 const headers = [
     { title: 'Nombre', value: 'nombre', align: 'center' },
     { title: 'Dosis Requerida', value: 'dosisRequerida', align: 'center' },
@@ -214,6 +217,7 @@ const headers = [
     { title: 'Acciones', value: 'acciones', sortable: false, align: 'center' }
 ]
 
+// Cargar a la tabla todas las vacunas
 const obtenerVacunas = async () => {
     try {
         loading.value = true
@@ -237,11 +241,13 @@ const obtenerVacunas = async () => {
     }
 }
 
+// Al cargar el componente se cargan las vacunas
 onMounted(() => {
     obtenerVacunas()
-    cargarFabricantes()
+    
 })
 
+// Cargar fabricantes
 const cargarFabricantes = async () => {
     try {
         loadingFabricantes.value = true
@@ -258,6 +264,7 @@ const cargarFabricantes = async () => {
     }
 }
 
+// Modal para la edicion
 const abrirModal = (item) => {
     const raw = item.raw
     form.value = {
@@ -269,8 +276,11 @@ const abrirModal = (item) => {
         manufacturer: raw.manufacturer.id
     }
     modal.value = true
+    // Carga los fabricantes al abrir el modal
+    cargarFabricantes()
 }
 
+// Guardar cambios
 const guardarCambios = async () => {
     try {
         loading.value = true
@@ -293,11 +303,13 @@ const guardarCambios = async () => {
     }
 }
 
+// Prepara el borrado, carga la informacion de la vacuna y pregunta si lo quieres borrar
 const prepararEliminacion = (item) => {
     vacunaBorrar.value = item
     mostrarDialogo.value = true
 }
 
+// Luego de la consulta, se confirma la eliminacion
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
@@ -313,12 +325,14 @@ const confirmarEliminacion = async () => {
     }
 }
 
+// Mensaje del dialogo donde pregunta si quieres borrar la vacuna
 const mensajeDialogo = computed(() => {
     return vacunaBorrar.value?.vaccineName
     ? `¿Deseas eliminar la vacuna ${vacunaBorrar.value.vaccineName}?`
     : '¿Deseas eliminar esta vacuna?'
 })
 
+// Normalizar texto para la tabla
 const normalizar = (str) => str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 const vacunasFiltradas = computed(() => {

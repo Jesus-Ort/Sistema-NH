@@ -7,7 +7,7 @@
                 <!-- <GestionAreasSalud /> -->
                 <!-- <GestionLotes></GestionLotes> -->
                 <!-- <GestionPais></GestionPais> -->
-                <GestionVacunas></GestionVacunas>
+                <!-- <GestionVacunas></GestionVacunas> -->
             </v-col>
     </v-row>
 </v-container>
@@ -18,5 +18,5 @@
 // import GestionAreasSalud from '@/components/GestionAreasSalud.vue'
 // import GestionLotes from '@/components/GestionLotes.vue'
 // import GestionPais from '@/components/GestionPais.vue'
-import GestionVacunas from '@/components/GestionVacunas.vue'
+// import GestionVacunas from '@/components/GestionVacunas.vue'
 </script>

@@ -43,7 +43,19 @@
                         :error-messages="phoneError"
                         prepend-icon="mdi-phone"
                     ></v-text-field>
-        
+
+                    <!-- Teléfono Móvil -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="mobilePhone"
+                        clearable
+                        label="Teléfono Móvil del Centro de Salud"
+                        required
+                        color="text"
+                        :error-messages="mobilePhoneError"
+                        prepend-icon="mdi-phone"
+                    ></v-text-field>
+
                     <!-- Email -->
                     <v-text-field
                         class="mt-4"
@@ -86,6 +98,7 @@ const { handleSubmit } = useForm({
         centerName: yup.string().required('El nombre del centro de salud es requerido').min(3,"Debe contener mínimo 3 caracteres").matches(/^[a-zA-Z0-9 _-]+$/,"Solo pueden ser letras, numeros y signos ( - _ )"),
         address: yup.string().required('La dirección del centro de salud es requerida').min(1,"Debe contener mínimo 1 caracter").matches(/^[a-zA-Z0-9 _-]+$/,"Solo pueden ser letras, numeros y signos ( - _ )"),
         phone: yup.string().required('El teléfono del centro de salud es requerido').min(11,"Debe contener minimo 11 números").matches(/^[0-9]+$/,"Solo pueden ser números"),
+        mobilePhone: yup.string().required('El teléfono del centro de salud es requerido').min(11,"Debe contener minimo 11 números").matches(/^[0-9]+$/,"Solo pueden ser números"),
         email: yup.string().matches(/^[\w-.]+@(gmail\.com|outlook\.com|yahoo\.com|hotmail\.com)$/, 'Solo se permiten correos de Gmail, Outlook, Yahoo o Hotmail').required('El correo electrónico es requerido'),
     })
 }); 
@@ -94,6 +107,7 @@ const { handleSubmit } = useForm({
 const {value: centerName, errorMessage: centerNameError} = useField("centerName")
 const {value: address, errorMessage: addressError} = useField("address")
 const {value: phone, errorMessage: phoneError} = useField("phone")
+const {value: mobilePhone, errorMessage: mobilePhoneError} = useField("mobilePhone")
 const {value: email, errorMessage: emailError} = useField("email")
 
 // Envio
@@ -105,6 +119,7 @@ const registro = handleSubmit( async (values) => {
         centerName: values.centerName,
         address: values.address,
         phone: values.phone,
+        mobilePhone: values.mobilePhone,
         email: values.email
         }
         );

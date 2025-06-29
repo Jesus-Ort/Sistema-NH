@@ -36,11 +36,12 @@
                 minWidth: '600px'
                 }"
             >
-                <template #item.acciones="{ item }">
-                <v-btn icon color="warning" @click="abrirModal(item)">
+            <!-- Botones Tabla -->
+                <template #item.acciones="{ item }" >
+                <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
                     <v-icon class="text-white">mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon color="error" @click="prepararEliminacion(item)">
+                <v-btn icon color="error" class="mb-1 mt-1" @click="prepararEliminacion(item)">
                     <v-icon class="text-white">mdi-delete</v-icon>
                 </v-btn>
                 </template>
@@ -55,25 +56,74 @@
             <v-card-title>Editar Area de Salud</v-card-title>
             <v-card-text>
             <v-form @submit.prevent="validarYGuardar">
-                <v-text-field
-                v-model="form.nombre"
-                label="Nombre"
-                :error-messages="errors.nombre"
-                required
-                clearable
-                />
-                <v-text-field
-                v-model="form.direccion"
-                label="Dirección"
-                :error-messages="errors.direccion"
-                required
-                clearable
-                />
+                
+                    <!-- Nombre  -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="form.centerName"
+                        clearable
+                        label="Nombre del Centro de Salud"
+                        required
+                        color="text"
+                        :error-messages="errors.centerName"
+                        prepend-icon="mdi-hospital-building"
+                    ></v-text-field>
+        
+                    <!-- Dirección -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="form.address"
+                        clearable
+                        label="Dirección del Centro de Salud"
+                        required
+                        color="text"
+                        :error-messages="errors.address"
+                        prepend-icon="mdi-directions"
+                    ></v-text-field>
+        
+                    <!-- Teléfono -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="form.phone"
+                        clearable
+                        label="Teléfono del Centro de Salud"
+                        required
+                        color="text"
+                        :error-messages="errors.phone"
+                        prepend-icon="mdi-phone"
+                    ></v-text-field>
+        
+                    <!-- Teléfono Móvil -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="form.mobilePhone"
+                        clearable
+                        label="Teléfono Móvil del Centro de Salud"
+                        required
+                        color="text"
+                        :error-messages="errors.mobilePhone"
+                        prepend-icon="mdi-phone"
+                    ></v-text-field>
+        
+                    <!-- Email -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="form.email"
+                        clearable
+                        label="Email del Centro de Salud"
+                        required
+                        color="text"
+                        :error-messages="errors.email"
+                        prepend-icon="mdi-email"
+                    ></v-text-field>
+
+                <!--Botones modal  -->
                 <v-card-actions>
                 <v-spacer />
                 <v-btn text @click="modal = false " :disabled="loading">Cancelar</v-btn>
-                <v-btn color="primary" @click="validarYGuardar" :disabled="loading">Guardar</v-btn>
+                <v-btn color="text" @click="validarYGuardar" :disabled="loading">Guardar</v-btn>
                 </v-card-actions>
+                
             </v-form>
             </v-card-text>
         </v-card>
@@ -108,17 +158,23 @@ const areaSaludBorrar = ref({})
 const busqueda = ref('')
 const form = ref({
     id: null,
-    nombre: '',
-    direccion: ''
+    centerName: '',
+    address: '',
+    email: '',
+    phone: '',
+    mobilePhone: ''
 })
 const errors = ref({})
 
 const schema = yup.object({
-    nombre: yup.string().required('El nombre es requerido').min(2, 'Mínimo 2 letras').matches(/^[a-zA-ZñÑ ]+$/, 'Solo letras y espacios'),
-    direccion: yup.string().min(1, 'Mínimo 1 caracter').matches(/^[a-zA-Z0-9 _-]+$/, 'Solo pueden ser letras, números y signos ( - _ )'),
-
+        centerName: yup.string().required('El nombre del centro de salud es requerido').min(3,"Debe contener mínimo 3 caracteres").matches(/^[a-zA-Z0-9 _-]+$/,"Solo pueden ser letras, numeros y signos ( - _ )"),
+        address: yup.string().required('La dirección del centro de salud es requerida').min(1,"Debe contener mínimo 1 caracter").matches(/^[a-zA-Z0-9 _-]+$/,"Solo pueden ser letras, numeros y signos ( - _ )"),
+        phone: yup.string().required('El teléfono del centro de salud es requerido').min(11,"Debe contener minimo 11 números").matches(/^[0-9]+$/,"Solo pueden ser números"),
+        mobilePhone: yup.string().required('El teléfono del centro de salud es requerido').min(11,"Debe contener minimo 11 números").matches(/^[0-9]+$/,"Solo pueden ser números"),
+        email: yup.string().matches(/^[\w-.]+@(gmail\.com|outlook\.com|yahoo\.com|hotmail\.com)$/, 'Solo se permiten correos de Gmail, Outlook, Yahoo o Hotmail').required('El correo electrónico es requerido'),
 })
 
+// Valida para guardar correctamente 
 const validarYGuardar = async () => {
     try {
         await schema.validate(form.value, { abortEarly: false })
@@ -147,12 +203,17 @@ watch(form, async (nuevo) => {
     }
 }, { deep: true })
 
+// Titulos en la tabla
 const headers = [
-    { title: 'Nombre', value: 'nombre', align: 'center' },
-    { title: 'Dirección', value: 'direccion', align: 'center' },
+    { title: 'Nombre', value: 'centerName', align: 'center' },
+    { title: 'Dirección', value: 'address', align: 'center' },
+    { title: 'Email', value: 'email', align: 'center' },
+    { title: 'Teléfono', value: 'phone', align: 'center' },
+    { title: 'Teléfono movil', value: 'mobilePhone', align: 'center' },
     { title: 'Acciones', value: 'acciones', sortable: false, align: 'center' }
 ]
 
+// Cargar a la tabla todos las areas de salud
 const obtenerAreas = async () => {
     try {
         loading.value = true
@@ -161,8 +222,11 @@ const obtenerAreas = async () => {
         .filter(p => p.isActive !== false)
         .map(p => ({
             id: p.id,
-            nombre: p.centerName || 'N/A',
-            direccion: p.address || 'N/A',
+            centerName: p.centerName || 'N/A',
+            address: p.address || 'N/A',
+            email: p.email || 'N/A',
+            phone: p.phone || 'N/A',
+            mobilePhone: p.mobilePhone || 'N/A',
             raw: p
         }))
     } catch (err) {
@@ -172,28 +236,35 @@ const obtenerAreas = async () => {
         loading.value = false
     }
 }
-
+// Al cargar el componente se cargan las areas de salud
 onMounted(() => {
     obtenerAreas()
 })
 
-
+// Modal para la edicion
 const abrirModal = (item) => {
     const raw = item.raw
     form.value = {
         id: raw.id,
-        nombre: raw.centerName,
-        direccion: raw.address
+        centerName: raw.centerName,
+        address: raw.address,
+        email: raw.email,
+        phone: raw.phone,
+        mobilePhone: raw.mobilePhone,
     }
     modal.value = true
 }
 
+// Guardar cambios
 const guardarCambios = async () => {
     try {
         loading.value = true
         const data = {
-        centerName: form.value.nombre,
-        address: form.value.direccion
+        centerName: form.value.centerName,
+        address: form.value.address,
+        email: form.value.email,
+        phone: form.value.phone,
+        mobilePhone: form.value.mobilePhone,
         }
         await axios.patch(`/api/v1/vaccination-centers/${form.value.id}`, data)
         $snackbar.success('Area de Salud actualizada correctamente')
@@ -207,11 +278,13 @@ const guardarCambios = async () => {
     }
 }
 
+// Prepara el borrado, carga la informacion del area de salud y pregunta si la quieres borrar
 const prepararEliminacion = (item) => {
     areaSaludBorrar.value = item
     mostrarDialogo.value = true
 }
 
+// Luego de la consulta, se confirma la eliminacion
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
@@ -227,19 +300,24 @@ const confirmarEliminacion = async () => {
     }
 }
 
+// Mensaje del dialogo donde pregunta si quieres borrar el area de salud
 const mensajeDialogo = computed(() => {
     return areaSaludBorrar.value?.centerName
     ? `¿Deseas eliminar el Area de Salud ${areaSaludBorrar.value.centerName}?`
     : '¿Deseas eliminar este Area de Salud?'
 })
 
+// Normalizar texto para la tabla
 const normalizar = (str) => str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 const areasFiltradas = computed(() => {
     const texto = normalizar(busqueda.value)
     return areasSalud.value.filter(p =>
-        normalizar(p.nombre).includes(texto) ||
-        normalizar(p.direccion).includes(texto)
+        normalizar(p.centerName).includes(texto) ||
+        normalizar(p.address).includes(texto) ||
+        normalizar(p.email).includes(texto) ||
+        normalizar(p.phone).includes(texto) ||
+        normalizar(p.mobilePhone).includes(texto)
     )
     })
 </script>

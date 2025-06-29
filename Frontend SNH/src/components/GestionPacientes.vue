@@ -36,11 +36,12 @@
                 minWidth: '600px'
                 }"
             >
+            <!-- Botones Tabla -->
                 <template #item.acciones="{ item }">
-                <v-btn icon color="warning" @click="abrirModal(item)">
+                <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
                     <v-icon class="text-white">mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon color="error" @click="prepararEliminacion(item)">
+                <v-btn icon color="error" class="mb-1 mt-1" @click="prepararEliminacion(item)">
                     <v-icon class="text-white">mdi-delete</v-icon>
                 </v-btn>
                 </template>
@@ -55,6 +56,7 @@
             <v-card-title>Editar Paciente</v-card-title>
             <v-card-text>
             <v-form @submit.prevent="validarYGuardar">
+                <!-- Checbox para saber si tiene cedula o no -->
                 <v-checkbox
                 v-model="form.isChild"
                 label="¿Sin cédula?"
@@ -72,28 +74,40 @@
                     Las Cedulas proporcionadas por el sistema inician en 999
                 </p>
 
+                <!-- Nombre -->
                 <v-text-field
                 v-model="form.firstName"
                 label="Nombre"
                 :error-messages="errors.firstName"
                 required
                 clearable
+                prepend-icon="mdi-account"
+                color="text"
                 />
+
+                <!-- Apellido -->
                 <v-text-field
                 v-model="form.lastname"
                 label="Apellido"
+                color="text"
                 :error-messages="errors.lastname"
                 required
                 clearable
+                prepend-icon="mdi-account-box"
                 />
+
+                <!-- Cédula -->
                 <v-text-field
                 v-model="form.identityDocument"
                 label="Cédula"
                 :error-messages="errors.identityDocument"
                 required
                 clearable
+                prepend-icon="mdi-card"
+                color="text"
                 />
 
+                <!-- Representante -->
                 <v-select
                 v-if="form.isChild"
                 v-model="form.representativeId"
@@ -103,23 +117,35 @@
                 label="Representante"
                 :error-messages="errors.representativeId"
                 clearable
+                prepend-icon="mdi-account"
+                color="text"
                 />
+
+                <!-- Teléfono Móvil -->
                 <v-text-field
                 v-model="form.mobilePhone"
                 label="Teléfono"
                 :error-messages="errors.mobilePhone"
                 clearable
+                prepend-icon="mdi-phone"
+                color="text"
                 />
+
+                <!-- Dirección -->
                 <v-text-field
                 v-model="form.address"
                 label="Dirección"
                 :error-messages="errors.address"
                 clearable
+                color="text"
+                prepend-icon="mdi-home"
                 />
+
+                <!-- Botones Modal -->
                 <v-card-actions>
                 <v-spacer />
                 <v-btn text @click="modal = false " :disabled="loading">Cancelar</v-btn>
-                <v-btn color="primary" @click="validarYGuardar" :disabled="loading">Guardar</v-btn>
+                <v-btn color="text" @click="validarYGuardar" :disabled="loading">Guardar</v-btn>
                 </v-card-actions>
             </v-form>
             </v-card-text>
@@ -178,6 +204,7 @@ const schema = yup.object({
     })
 })
 
+// Valida para guardar correctamente 
 const validarYGuardar = async () => {
     try {
         await schema.validate(form.value, { abortEarly: false })
@@ -206,6 +233,7 @@ watch(form, async (nuevo) => {
     }
 }, { deep: true })
 
+// Titulos en la tabla
 const headers = [
     { title: 'Nombre', value: 'nombreCompleto', align: 'center' },
     { title: 'Cédula', value: 'identityDocument', align: 'center' },
@@ -215,6 +243,7 @@ const headers = [
     { title: 'Acciones', value: 'acciones', sortable: false, align: 'center' }
 ]
 
+// Cargar a la tabla todos los pacientes
 const obtenerPacientes = async () => {
     try {
         loading.value = true
@@ -252,11 +281,12 @@ const obtenerPacientes = async () => {
     }
 }
 
+// Al cargar el componente se cargan los pacientes
 onMounted(() => {
     obtenerPacientes()
 })
 
-
+// Modal para la edicion
 const abrirModal = (item) => {
     const raw = item.raw
     form.value = {
@@ -272,6 +302,7 @@ const abrirModal = (item) => {
     modal.value = true
 }
 
+// Guardar cambios
 const guardarCambios = async () => {
     try {
         loading.value = true
@@ -296,11 +327,13 @@ const guardarCambios = async () => {
     }
 }
 
+// Prepara el borrado, carga la informacion del paciente y pregunta si lo quieres borrar
 const prepararEliminacion = (item) => {
     pacienteBorrar.value = item
     mostrarDialogo.value = true
 }
 
+// Luego de la consulta, se confirma la eliminacion
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
@@ -316,12 +349,14 @@ const confirmarEliminacion = async () => {
     }
 }
 
+// Mensaje del dialogo donde pregunta si quieres borrar el paciente
 const mensajeDialogo = computed(() => {
     return pacienteBorrar.value?.nombreCompleto
     ? `¿Deseas eliminar al paciente ${pacienteBorrar.value.nombreCompleto}?`
     : '¿Deseas eliminar este paciente?'
 })
 
+// Normalizar texto para la tabla
 const normalizar = (str) => str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 const pacientesFiltrados = computed(() => {

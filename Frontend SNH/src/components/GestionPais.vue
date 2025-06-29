@@ -36,11 +36,12 @@
                 minWidth: '600px'
                 }"
             >
+            <!-- Botones Tabla -->
                 <template #item.acciones="{ item }">
-                <v-btn icon color="warning" @click="abrirModal(item)">
+                <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
                     <v-icon class="text-white">mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon color="error" @click="prepararEliminacion(item)">
+                <v-btn icon color="error" class="mb-1 mt-1" @click="prepararEliminacion(item)">
                     <v-icon class="text-white">mdi-delete</v-icon>
                 </v-btn>
                 </template>
@@ -55,6 +56,7 @@
             <v-card-title>Editar País</v-card-title>
             <v-card-text>
             <v-form @submit.prevent="validarYGuardar">
+
                     <!-- Pais -->
                 <v-text-field
                     class="mt-4"
@@ -66,6 +68,8 @@
                     :error-messages="errors.country"
                     prepend-icon="mdi-earth"
                 ></v-text-field>
+
+                <!-- Botones Modal -->
                 <v-card-actions>
                 <v-spacer />
                 <v-btn text @click="modal = false " :disabled="loading">Cancelar</v-btn>
@@ -113,6 +117,7 @@ const schema = yup.object({
     country: yup.string().required('El país es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[a-zA-ZñÑ ]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
 })
 
+// Valida para guardar correctamente 
 const validarYGuardar = async () => {
     try {
         await schema.validate(form.value, { abortEarly: false })
@@ -141,11 +146,13 @@ watch(form, async (nuevo) => {
     }
 }, { deep: true })
 
+// Titulos en la tabla
 const headers = [
     { title: 'País', value: 'pais', align: 'center' },
     { title: 'Acciones', value: 'acciones', sortable: false, align: 'center' }
 ]
 
+// Cargar a la tabla todos los paises
 const obtenerPaises = async () => {
     try {
         loading.value = true
@@ -165,11 +172,12 @@ const obtenerPaises = async () => {
     }
 }
 
+// Al cargar el componente se cargan los paises
 onMounted(() => {
     obtenerPaises()
 })
 
-
+// Modal para la edicion
 const abrirModal = (item) => {
     const raw = item.raw
     form.value = {
@@ -179,6 +187,7 @@ const abrirModal = (item) => {
     modal.value = true
 }
 
+// Guardar cambios
 const guardarCambios = async () => {
     try {
         loading.value = true
@@ -197,11 +206,13 @@ const guardarCambios = async () => {
     }
 }
 
+// Prepara el borrado, carga la informacion del pais y pregunta si lo quieres borrar
 const prepararEliminacion = (item) => {
     paisBorrar.value = item
     mostrarDialogo.value = true
 }
 
+// Luego de la consulta, se confirma la eliminacion
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
@@ -217,12 +228,14 @@ const confirmarEliminacion = async () => {
     }
 }
 
+// Mensaje del dialogo donde pregunta si quieres borrar el pais
 const mensajeDialogo = computed(() => {
     return paisBorrar.value?.pais
     ? `¿Deseas eliminar el País ${paisBorrar.value.pais}?`
     : '¿Deseas eliminar este País?'
 })
 
+// Normalizar texto para la tabla
 const normalizar = (str) => str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 const paisesFiltrados = computed(() => {

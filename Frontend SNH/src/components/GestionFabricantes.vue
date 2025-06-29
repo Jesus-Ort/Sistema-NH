@@ -36,11 +36,12 @@
                 minWidth: '600px'
                 }"
             >
+            <!-- Botones Tabla -->
                 <template #item.acciones="{ item }">
-                <v-btn icon color="warning" @click="abrirModal(item)">
+                <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
                     <v-icon class="text-white">mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon color="error" @click="prepararEliminacion(item)">
+                <v-btn icon color="error" class="mb-1 mt-1" @click="prepararEliminacion(item)">
                     <v-icon class="text-white">mdi-delete</v-icon>
                 </v-btn>
                 </template>
@@ -55,28 +56,43 @@
             <v-card-title>Editar Fabricantes</v-card-title>
             <v-card-text>
             <v-form @submit.prevent="validarYGuardar">
-                <v-text-field
-                v-model="form.nombre"
-                label="Nombre"
-                :error-messages="errors.nombre"
-                required
-                clearable
-                />
-                <v-select
-                v-model="form.pais"
-                :items="paises"
-                item-title="nameCountry"
-                item-value="id"
-                label="País"
-                :error-messages="errors.pais"
-                required
-                clearable
-                />
+
+                    <!-- Fabricante -->
+                    <v-text-field
+                        class="mt-4"
+                        v-model="form.manufacturer"
+                        clearable
+                        label="Fabricante"
+                        required
+                        color="text"
+                        :error-messages="errors.manufacturer"
+                        prepend-icon="mdi-factory"
+                    ></v-text-field>
+        
+                    <!-- Buscado por nombre, agregado como array, devolver ID  -->
+                    <!-- País -->
+                    <v-select
+                        class="mt-4"
+                        v-model="form.country"
+                        :items="paises"
+                        item-title="nameCountry"
+                        :item-value="'id'"
+                        :loading="loadingPaises"
+                        :disabled="loadingPaises"
+                        label="País"
+                        color="text"
+                        required
+                        :error-messages="errors.country"
+                        prepend-icon="mdi-earth">
+                    </v-select>
+
+                <!-- Botones modal -->
                 <v-card-actions>
                 <v-spacer />
                 <v-btn text @click="modal = false " :disabled="loading">Cancelar</v-btn>
-                <v-btn color="primary" @click="validarYGuardar" :disabled="loading">Guardar</v-btn>
+                <v-btn color="text" @click="validarYGuardar" :disabled="loading">Guardar</v-btn>
                 </v-card-actions>
+
             </v-form>
             </v-card-text>
         </v-card>
@@ -105,6 +121,7 @@ const { isDark } = useDarkMode()
 
 const fabricantes = ref([])
 const paises = ref([])
+const loadingPaises = ref(false)
 const loading = ref(false)
 const modal = ref(false)
 const mostrarDialogo = ref(false)
@@ -112,16 +129,17 @@ const fabricanteBorrar = ref({})
 const busqueda = ref('')
 const form = ref({
     id: null,
-    nombre: '',
-    pais: ''
+    manufacturer: '',
+    country: ''
 })
 const errors = ref({})
 
 const schema = yup.object({
-    nombre: yup.string().required('El fabricante es requerido').min(1,"Debe contener mínimo 1 caracter").matches(/^[a-zA-Z\s]+$/,"Solo pueden ser letras sin tildes"),
-    pais: yup.string().required('El país es requerido').min(1,"Debe contener mínimo 1 caracter"),
+        manufacturer: yup.string().required('El fabricante es requerido').min(1,"Debe contener mínimo 1 caracter").matches(/^[a-zA-Z\s]+$/,"Solo pueden ser letras sin tildes"),
+        country: yup.string().required('El país es requerido').min(1,"Debe contener mínimo 1 caracter"),
 })
 
+// Valida para guardar correctamente 
 const validarYGuardar = async () => {
     try {
         await schema.validate(form.value, { abortEarly: false })
@@ -150,12 +168,14 @@ watch(form, async (nuevo) => {
     }
 }, { deep: true })
 
+// Titulos en la tabla
 const headers = [
-    { title: 'Nombre', value: 'nombre', align: 'center' },
-    { title: 'País', value: 'pais', align: 'center' },
+    { title: 'Nombre', value: 'manufacturer', align: 'center' },
+    { title: 'País', value: 'country', align: 'center' },
     { title: 'Acciones', value: 'acciones', sortable: false, align: 'center' }
 ]
 
+// Cargar a la tabla todos los fabricantes
 const obtenerFabricantes = async () => {
     try {
         loading.value = true
@@ -164,8 +184,8 @@ const obtenerFabricantes = async () => {
         .filter(p => p.isActive !== false)
         .map(p => ({
             id: p.id,
-            nombre: p.manufacturerName || 'N/A',
-            pais: p.country.nameCountry || 'N/A',
+            manufacturer: p.manufacturerName || 'N/A',
+            country: p.country.nameCountry || 'N/A',
             raw: p
         }))
     } catch (err) {
@@ -176,13 +196,15 @@ const obtenerFabricantes = async () => {
     }
 }
 
+// Al cargar el componente se cargan los fabricantes
 onMounted(() => {
     obtenerFabricantes()
-    cargarPaises()
 })
 
+// Cargar paises
 const cargarPaises = async () => {
     try {
+        loadingPaises.value = true
         const res = await axios.get('/api/v1/countries')
         paises.value = res.data.map(vb => ({
         id: vb.id,
@@ -191,19 +213,25 @@ const cargarPaises = async () => {
     } catch (error) {
         const msg = error.response?.data?.message || 'Error al cargar los paises'
         $snackbar.error(`Algo salió mal al cargar los paises: ${msg}`)
+    } finally{
+        loadingPaises.value = false
     }
 }
 
+// Modal para la edicion
 const abrirModal = (item) => {
     const raw = item.raw
     form.value = {
         id: raw.id,
-        nombre: raw.manufacturerName,
-        pais: raw.country.id
+        manufacturer: raw.manufacturerName,
+        country: raw.country.id
     }
     modal.value = true
+    // Carga los paises al abrir el modal
+    cargarPaises()
 }
 
+// Guardar cambios
 const guardarCambios = async () => {
     try {
         loading.value = true
@@ -223,11 +251,13 @@ const guardarCambios = async () => {
     }
 }
 
+// Prepara el borrado, carga la informacion del fabricante y pregunta si lo quieres borrar
 const prepararEliminacion = (item) => {
     fabricanteBorrar.value = item
     mostrarDialogo.value = true
 }
 
+// Luego de la consulta, se confirma la eliminacion
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
@@ -243,19 +273,21 @@ const confirmarEliminacion = async () => {
     }
 }
 
+// Mensaje del dialogo donde pregunta si quieres borrar el fabricante
 const mensajeDialogo = computed(() => {
     return fabricanteBorrar.value?.manufacturerName
     ? `¿Deseas eliminar el Fabricante ${fabricanteBorrar.value.manufacturerName}?`
     : '¿Deseas eliminar este Fabricante?'
 })
 
+// Normalizar texto para la tabla
 const normalizar = (str) => str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 const fabricantesFiltrados = computed(() => {
     const texto = normalizar(busqueda.value)
     return fabricantes.value.filter(p =>
-        normalizar(p.nombre).includes(texto) ||
-        normalizar(p.pais).includes(texto)
+        normalizar(p.manufacturer).includes(texto) ||
+        normalizar(p.country).includes(texto)
     )
     })
 </script>

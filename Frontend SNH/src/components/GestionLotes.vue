@@ -44,12 +44,13 @@
             <template #item.expirationDate="{ item }">
                 {{ formatearFecha(item.expirationDate) }}
             </template>
-            <!-- Botones de Edicion y Borrado -->
+
+            <!-- Botones Tabla -->
                 <template #item.acciones="{ item }">
-                <v-btn icon color="warning" @click="abrirModal(item)">
+                <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
                     <v-icon class="text-white">mdi-pencil</v-icon>
                 </v-btn>
-                <v-btn icon color="error" @click="prepararEliminacion(item)">
+                <v-btn icon color="error" class="mb-1 mt-1" @click="prepararEliminacion(item)">
                     <v-icon class="text-white">mdi-delete</v-icon>
                 </v-btn>
                 </template>
@@ -73,6 +74,7 @@
                         item-title="vaccineName"
                         :item-value="'id'"
                         :loading="loadingVacunas"
+                        :disabled="loadingVacunas"
                         label="Vacuna"
                         color="text"
                         required
@@ -143,11 +145,11 @@
                         prepend-icon="mdi-asterisk"
                         control-variant="hidden"
                     ></v-number-input>
-        
+                <!-- Botones Modal -->
                 <v-card-actions>
                 <v-spacer />
                 <v-btn text @click="modal = false " :disabled="loading">Cancelar</v-btn>
-                <v-btn color="primary" @click="validarYGuardar" :disabled="loading">Guardar</v-btn>
+                <v-btn color="text" @click="validarYGuardar" :disabled="loading">Guardar</v-btn>
                 </v-card-actions>
             </v-form>
             </v-card-text>
@@ -204,6 +206,7 @@ const schema = yup.object({
     vaccine: yup.string().required('La vacuna es requerida')
 })
 
+// Valida para guardar correctamente 
 const validarYGuardar = async () => {
     try {
         await schema.validate(form.value, { abortEarly: false })
@@ -232,16 +235,18 @@ watch(form, async (nuevo) => {
     }
 }, { deep: true })
 
+// Titulos en la tabla
 const headers = [
     { title: 'Vacuna', value: 'vaccineName', align: 'center' },
     { title: 'Numero del lote', value: 'batchNumber', align: 'center' },
-    { title: 'Fecha de Fabricación', value: 'manufactureDate', sortable: false, align: 'center' },
+    { title: 'Fecha de Fabricación', value: 'manufactureDate', align: 'center' },
     { title: 'Fecha de Vencimiento', value: 'expirationDate', align: 'center' },
     { title: 'Cantidad de viales inicial', value: 'initialQuantity', align: 'center' },
     { title: 'Cantidad de viales disponible', value: 'availableQuantity', align: 'center' },
     { title: 'Acciones', value: 'acciones', sortable: false, align: 'center' }
 ]
 
+// Cargar a la tabla todos los lotes
 const obtenerLotes = async () => {
     try {
         loading.value = true
@@ -266,11 +271,12 @@ const obtenerLotes = async () => {
     }
 }
 
+// Al cargar el componente se cargan los lotes
 onMounted(() => {
     obtenerLotes()
-    cargarVacunas()
 })
 
+// Formatear la fecha
 const formatearFecha = (fecha) => {
     if (!fecha) return ''
     const d = new Date(fecha)
@@ -280,9 +286,10 @@ const formatearFecha = (fecha) => {
     return `${dia}-${mes}-${anio}`
 }
 
-
+// Cargar Vacunas
 const cargarVacunas = async () => {
     try {
+        loadingVacunas.value = true
         const res = await axios.get('/api/v1/vaccines')
         vacunas.value = res.data.map(vb => ({
         id: vb.id,
@@ -291,9 +298,12 @@ const cargarVacunas = async () => {
     } catch (error) {
         const msg = error.response?.data?.message || 'Error al cargar las Vacunas'
         $snackbar.error(`Algo salió mal al cargar las Vacunas: ${msg}`)
+    } finally{
+        loadingVacunas.value = false;
     }
 }
 
+// Modal para la edicion
 const abrirModal = (item) => {
     const raw = item.raw
     form.value = {
@@ -306,8 +316,11 @@ const abrirModal = (item) => {
     availableQuantity: raw.availableQuantity
     }
     modal.value = true
+    // Carga las vacunas al abrir el modal
+    cargarVacunas()
 }
 
+// Guardar cambios
 const guardarCambios = async () => {
     try {
         loading.value = true
@@ -331,11 +344,13 @@ const guardarCambios = async () => {
     }
 }
 
+// Prepara el borrado, carga la informacion del lote y pregunta si lo quieres borrar
 const prepararEliminacion = (item) => {
     loteBorrar.value = item
     mostrarDialogo.value = true
 }
 
+// Luego de la consulta, se confirma la eliminacion
 const confirmarEliminacion = async () => {
     try {
         loading.value = true
@@ -351,12 +366,14 @@ const confirmarEliminacion = async () => {
     }
 }
 
+// Mensaje del dialogo donde pregunta si quieres borrar el lote
 const mensajeDialogo = computed(() => {
     return loteBorrar.value?.batchNumber
     ? `¿Deseas eliminar el Lote ${loteBorrar.value.batchNumber}?`
     : '¿Deseas eliminar este Fabricante?'
 })
 
+// Normalizar texto para la tabla
 const normalizar = (str) => str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 const lotesFiltrados = computed(() => {
