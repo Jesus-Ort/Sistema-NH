@@ -115,7 +115,7 @@ onMounted(async () => {
 // Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        name: yup.string().required('El nombre es requerido').min(1, "Debe contener minimo 1 letras").matches(/^[a-zA-Z\s]+$/,"Solo pueden ser letras sin tildes"),
+        name: yup.string().required('El nombre es requerido').min(1, "Debe contener minimo 1 letras").matches(/^[a-zA-Z0-9 +\-°]+$/,"Solo pueden ser letras, numeros y signos (+ - °) sin tildes"),
         manufacturer: yup.string().required('El fabricante es requerido').min(1,"Debe contener minimo 3 letras"),
         requiredDoses: yup.number().required('Las dosis requeridas son obligatorias').min(1, "Debe ser al menos 1 dosis"),
         intervalDoses: yup.number().required('El intervalo de dias para la dosis es obligatorio').min(1,"Debe ser al menos 1 día"),
