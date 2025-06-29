@@ -14,6 +14,7 @@ import PagePacientes from '@/pages/PagePacientes.vue'
 import PagePais from '@/pages/PagePais.vue'
 import PageVacunas from '@/pages/PageVacunas.vue'
 import PageForbidden from '@/pages/PageForbidden.vue'
+import FormularioDosis from '@/components/FormularioDosis.vue'
 
 const routes = [
   {
@@ -76,6 +77,12 @@ const routes = [
         name: 'Vacunas',
         component: PageVacunas,
         meta: { requiresAuth: true, roles: ['admin'] }
+      },
+            {
+        path: 'formulario-dosis',
+        name: 'Formulario Dosis',
+        component: FormularioDosis,
+        meta: { requiresAuth: true, roles: ['admin', 'health'] }
       }
     ]
   }

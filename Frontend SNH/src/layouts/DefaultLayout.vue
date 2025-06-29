@@ -81,15 +81,21 @@ const allDrawerItems = [
   {
     title: 'Gestión Administrativa',
     items: [
-      { label: 'Areas de Salud', icon: 'mdi-file-chart', to: '/area-salud', roles: ['admin', ] },
-      { label: 'Dosis', icon: 'mdi-file-chart', to: '/dosis', roles: ['admin','salud'] },
-      { label: 'Fabricantes', icon: 'mdi-file-chart', to: '/fabricantes', roles: ['admin',] },
-      { label: 'Lotes', icon: 'mdi-file-chart', to: '/lotes', roles: ['admin',] },
-      { label: 'Pacientes', icon: 'mdi-file-chart', to: '/pacientes', roles: ['admin',] },
-      { label: 'País', icon: 'mdi-file-chart', to: '/pais', roles: ['admin',] },
-      { label: 'Vacunas', icon: 'mdi-file-chart', to: '/vacunas', roles: ['admin',] },
+      { label: 'Areas de Salud', icon: 'mdi-hospital-building', to: '/area-salud', roles: ['admin', ] },
+      { label: 'Dosis', icon: 'mdi-needle', to: '/dosis', roles: ['admin','salud'] },
+      { label: 'Fabricantes', icon: 'mdi-factory', to: '/fabricantes', roles: ['admin',] },
+      { label: 'Lotes', icon: 'mdi-package-variant', to: '/lotes', roles: ['admin',] },
+      { label: 'Pacientes', icon: 'mdi-account-group', to: '/pacientes', roles: ['admin',] },
+      { label: 'País', icon: 'mdi-earth', to: '/pais', roles: ['admin',] },
+      { label: 'Vacunas', icon: 'mdi-needle', to: '/vacunas', roles: ['admin',] },
     ],
   },
+  {
+    title:'Formularios',
+    items:[
+      { label: 'Formulario Dosis', icon: 'mdi-clipboard-text', to: '/formulario-dosis', roles: ['admin', 'healt'] },
+    ]
+  }
 ]
 
 /**
