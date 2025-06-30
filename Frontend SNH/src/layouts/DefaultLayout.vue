@@ -93,7 +93,7 @@ const allDrawerItems = [
   {
     title:'Formularios',
     items:[
-      { label: 'Formulario Dosis', icon: 'mdi-clipboard-text', to: '/formulario-dosis', roles: ['admin', 'healt'] },
+      { label: 'Formulario Dosis', icon: 'mdi-clipboard-text', to: '/formulario-dosis', roles: ['admin', 'health'] },
     ]
   }
 ]
