@@ -1,14 +1,14 @@
 <template>
     <v-container fluid>
         <v-row justify="center">
-        <v-col cols="12" sm="10" md="8">
+        <v-col cols="12">
             <v-card>
                 <!-- Titulo -->
             <v-card-title class="text-h5">Registro de Paciente y Dosis</v-card-title>
             <!-- Contenido -->
-            <v-card-text>
+            <v-card-text style="overflow-x: auto;">
                 <!-- Pasos del formulario -->
-                <v-stepper v-model="step">
+                <v-stepper v-model="step" style="min-width: 600px;">
                     <!-- Titulos de los pasos -->
                 <v-stepper-header>
                     <!-- Genera dinamicamente los pasos -->
@@ -25,7 +25,7 @@
                     <RegistroPacientes :key="'paciente-' + step" />
                     </v-stepper-window-item>
 
-                    <v-stepper-window-item :value="2">
+                    <v-stepper-window-item :value="2" >
                     <RegistroDosis :key="'dosis-' + step" />
                     </v-stepper-window-item>
                 </v-stepper-window>
