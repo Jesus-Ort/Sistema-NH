@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid class="d-flex justify-center align-center" style="min-height: 100vh;">
+    <v-container fluid class="d-flex justify-center align-center">
         <v-row justify="center">
             <v-col cols="12" sm="8" md="6" lg="4">
                 <v-form class="pa-4">

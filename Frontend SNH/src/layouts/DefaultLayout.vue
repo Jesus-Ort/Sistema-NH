@@ -81,7 +81,7 @@ const allDrawerItems = [
   {
     title: 'Gestión Administrativa',
     items: [
-      { label: 'Areas de Salud', icon: 'mdi-hospital-building', to: '/area-salud', roles: ['admin', ] },
+      { label: 'Centros de Salud', icon: 'mdi-hospital-building', to: '/area-salud', roles: ['admin', ] },
       { label: 'Dosis', icon: 'mdi-needle', to: '/dosis', roles: ['admin','salud'] },
       { label: 'Fabricantes', icon: 'mdi-factory', to: '/fabricantes', roles: ['admin',] },
       { label: 'Lotes', icon: 'mdi-package-variant', to: '/lotes', roles: ['admin',] },

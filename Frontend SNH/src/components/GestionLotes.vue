@@ -3,7 +3,7 @@
         <v-row>
         <v-col cols="12">
             <div class="mb-8">
-            <h3 class="mb-4">Gestion de los Lotes:</h3>
+            <h3 class="mb-4">Gestion de Lotes:</h3>
             <p>En esta sección podrás gestionar los Lotes.</p>
             <p>Podrás ver, editar y eliminar los Lotes</p>
             </div>
