@@ -21,7 +21,11 @@
                     ></v-text-field>
         
                     <div class="d-flex justify-end mt-4">
-                        <v-btn @click="registro()" block color="success">Registrar</v-btn>
+                        <v-btn @click="registro()" 
+                        block
+                        :loading="loading"
+                        :disabled="loading"
+                        color="success">Registrar</v-btn>
                     </div>
                 </v-form>
             </v-col>
@@ -32,21 +36,17 @@
 <script setup>
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
+import { ref } from 'vue'
+import axios from '@/services/axios';
+import { useSnackbar } from '@/composables/useSnackbar'
 
-// Propiedad para formulario en pasos (si es necesaria)
-const props = defineProps({
-    multistep: {
-    type: Boolean,
-    default: false
-    }
-})
-
-const emit = defineEmits(['next'])
+const $snackbar = useSnackbar()
+const loading = ref(false)
 
 // Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        country: yup.string().required('El país es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
+        country: yup.string().required('El país es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[a-zA-ZñÑ ]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
     })
 }); 
 
@@ -54,12 +54,23 @@ const { handleSubmit } = useForm({
 const {value: country, errorMessage: countryError} = useField("country")
 
 // Envio
-const registro = handleSubmit((values) => {
-    // Funcionalidad backend
-    console.log('Formulario enviado con los siguientes datos:', values);
-    if (props.multistep) {
-        emit('next')
-    }
+const registro = handleSubmit( async (values) => {
+    try {
+        loading.value = true
+
+        await axios.post('/api/v1/countries', {
+        nameCountry: values.country
+        }
+        );
+
+        $snackbar.success('¡Registro exitoso!');
+
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Error inesperado al registrarse';
+        $snackbar.error(`Algo salió mal al registrar el país: ${msg}`);
+    } finally {
+        loading.value = false;
+    } 
 }); 
 
 </script>

@@ -14,6 +14,7 @@ const router = useRouter()
 
 // Funcionalidad del backend
 const logout = () => {
+  localStorage.removeItem('role')   // Elimina el rol
   localStorage.removeItem('token')   // Elimina el token
   router.push('/login')              // Redirige al login
 }

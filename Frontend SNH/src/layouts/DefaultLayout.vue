@@ -56,12 +56,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 import NavBar from '@/components/NavBar.vue'
+import { useUserStore } from '@/stores/users'
 
 // Controlar el estado del drawer de navegación (abierto/cerrado)
 const drawer = ref(false)
-// Sacar del Backend. Puedes probar con administrativo o salud
-const userRole = ref('administrativo') 
 
+const userStore = useUserStore()
 
 // Define los ítems del drawer de navegación para el layout de la aplicación.
 // Cada objeto en el arreglo representa una sección en el drawer, con un título opcional y una lista de ítems.
@@ -75,30 +75,27 @@ const allDrawerItems = [
   {
     title: null,
     items: [
-      { label: 'Inicio', icon: 'mdi-home', to: '/inicio', roles: ['administrativo', 'salud'] },
-      { label: 'Reportes', icon: 'mdi-file-chart', to: '/reportes', roles: ['administrativo','salud'] },
+      { label: 'Inicio', icon: 'mdi-home', to: '/inicio', roles: ['admin', 'healt'] },
     ],
   },
   {
-    title: 'Registro Administrativo',
+    title: 'Gestión Administrativa',
     items: [
-      { label: 'Registrar Centro de Salud', icon: 'mdi-hospital-building', to: '/registro-area-salud', roles: ['administrativo'] },
-      { label: 'Registrar Dosis', icon: 'mdi-hospital', to: '/registro-dosis', roles: ['administrativo'] },
-      { label: 'Registrar Fabricante', icon: 'mdi-factory', to: '/registro-fabricantes', roles: ['administrativo'] },
-      { label: 'Registrar Lote', icon: 'mdi-package', to: '/registro-lotes', roles: ['administrativo'] },
-      { label: 'Registrar Paciente', icon: 'mdi-account-group', to: '/registro-pacientes', roles: ['administrativo'] },
-      { label: 'Registrar País', icon: 'mdi-earth', to: '/registro-pais', roles: ['administrativo'] },
-      { label: 'Registrar Rol', icon: 'mdi-account-key', to: '/registro-roles', roles: ['administrativo'] },
-      { label: 'Registrar Usuario', icon: 'mdi-account-cog', to: '/registro-usuarios', roles: ['administrativo'] },
-      { label: 'Registrar Vacuna', icon: 'mdi-needle', to: '/registro-vacunas', roles: ['administrativo'] },
+      { label: 'Areas de Salud', icon: 'mdi-hospital-building', to: '/area-salud', roles: ['admin', ] },
+      { label: 'Dosis', icon: 'mdi-needle', to: '/dosis', roles: ['admin','salud'] },
+      { label: 'Fabricantes', icon: 'mdi-factory', to: '/fabricantes', roles: ['admin',] },
+      { label: 'Lotes', icon: 'mdi-package-variant', to: '/lotes', roles: ['admin',] },
+      { label: 'Pacientes', icon: 'mdi-account-group', to: '/pacientes', roles: ['admin',] },
+      { label: 'País', icon: 'mdi-earth', to: '/pais', roles: ['admin',] },
+      { label: 'Vacunas', icon: 'mdi-needle', to: '/vacunas', roles: ['admin',] },
     ],
   },
-    {
-    title: "Formularios",
-    items: [
-      { label: 'Dosis Aplicada', icon: 'mdi-hospital', to: '/dosis-aplicada', roles: ['administrativo', 'salud'] },
-    ],
-  },
+  {
+    title:'Formularios',
+    items:[
+      { label: 'Formulario Dosis', icon: 'mdi-clipboard-text', to: '/formulario-dosis', roles: ['admin', 'healt'] },
+    ]
+  }
 ]
 
 /**
@@ -111,15 +108,17 @@ const allDrawerItems = [
  *
  * - Retorna un arreglo de secciones del drawer, cada una con un título y una lista filtrada de ítems según el rol del usuario.
  */
-const drawerItems = computed(() =>
-  allDrawerItems
+
+const drawerItems = computed(() => {
+  return allDrawerItems
     .map(section => {
-      const filteredItems = section.items.filter(i => i.roles.includes(userRole.value))
+      const filteredItems = section.items.filter(item => item.roles.includes(userStore.role))
       return {
         title: section.title,
-        items: filteredItems,
+        items: filteredItems
       }
     })
     .filter(section => section.items.length > 0)
-)
+})
+
 </script>

@@ -33,16 +33,6 @@
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
 
-// Propiedad para formulario en pasos (si es necesaria)
-const props = defineProps({
-    multistep: {
-    type: Boolean,
-    default: false
-    }
-})
-
-const emit = defineEmits(['next'])
-
 // Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
@@ -54,12 +44,9 @@ const { handleSubmit } = useForm({
 const {value: role, errorMessage: roleError} = useField("role")
 
 // Envio
-const registro = handleSubmit((values) => {
+const registro = handleSubmit(() => {
     // Funcionalidad backend
-    console.log('Formulario enviado con los siguientes datos:', values);
-    if (props.multistep) {
-        emit('next')
-    }
+    console.log(`este componente no esta siendo utilizado en el backend, 
+    pero se puede implementar la funcionalidad de registro de roles aquí`);
 }); 
-
 </script>

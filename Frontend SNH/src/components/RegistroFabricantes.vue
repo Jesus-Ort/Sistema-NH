@@ -23,19 +23,27 @@
         
                     <!-- Buscado por nombre, agregado como array, devolver ID  -->
                     <!-- País -->
-                    <v-autocomplete
+                    <v-select
                         class="mt-4"
                         v-model="country"
-                        :items="['País 1', 'País 2', 'País 3']"
+                        :items="paises"
+                        item-title="nameCountry"
+                        :item-value="'id'"
+                        :loading="loadingPaises"
                         label="País"
                         color="text"
                         required
                         :error-messages="countryError"
                         prepend-icon="mdi-earth">
-                    </v-autocomplete>
+                    </v-select>
         
                     <div class="d-flex justify-end mt-4">
-                        <v-btn @click="registro()" block color="success">Registrar</v-btn>
+                        <v-btn 
+                        @click="registro()"
+                        :loading="loading"
+                        :disabled="loading" 
+                        block 
+                        color="success">Registrar</v-btn>
                     </div>
                 </v-form>
             </v-col>
@@ -46,22 +54,33 @@
 <script setup>
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
+import { ref, onMounted } from 'vue'
+import axios from '@/services/axios';
+import { useSnackbar } from '@/composables/useSnackbar'
 
-// Propiedad para formulario en pasos (si es necesaria)
-const props = defineProps({
-    multistep: {
-    type: Boolean,
-    default: false
+const $snackbar = useSnackbar()
+const paises = ref([]);
+const loading = ref(false)
+const loadingPaises = ref(false)
+
+onMounted(async () => {
+    try {
+    loadingPaises.value = true;
+    const response = await axios.get('/api/v1/countries');
+    paises.value = response.data;
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Error inesperado al registrarse';
+        $snackbar.error(`Algo salió mal al cargar los paises: ${msg}`);
+    } finally {
+    loadingPaises.value = false;
     }
-})
-
-const emit = defineEmits(['next'])
+});
 
 // Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        manufacturer: yup.string().required('El fabricante es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z]+$/,"Solo pueden ser letras sin caracteres espciales ni numeros"),
-        country: yup.string().required('El país es requerido').min(3,"Debe contener minimo 3 letras"),
+        manufacturer: yup.string().required('El fabricante es requerido').min(1,"Debe contener mínimo 1 caracter").matches(/^[a-zA-Z\s]+$/,"Solo pueden ser letras sin tildes"),
+        country: yup.string().required('El país es requerido').min(1,"Debe contener mínimo 1 caracter"),
     })
 }); 
 
@@ -70,11 +89,23 @@ const {value: manufacturer, errorMessage: manufacturerError} = useField("manufac
 const {value: country, errorMessage: countryError} = useField("country")
 
 // Envio
-const registro = handleSubmit((values) => {
-    // Funcionalidad backend
-    console.log('Formulario enviado con los siguientes datos:', values);
-    if (props.multistep) {
-        emit('next')
+const registro = handleSubmit( async (values) => {
+    try {
+        loading.value = true
+
+        await axios.post('/api/v1/manufacturers', {
+        manufacturerName: values.manufacturer,
+        countryId: values.country,
+        }
+        );
+
+        $snackbar.success('¡Registro exitoso!');
+
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Error inesperado al registrarse';
+        $snackbar.error(`Algo salió mal al registrar el fabricante: ${msg}`);
+    } finally {
+        loading.value = false;
     }
 }); 
 

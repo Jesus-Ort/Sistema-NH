@@ -10,16 +10,19 @@
         
                     <!-- Buscado por nombre, agregado como array, devolver ID  -->
                     <!-- Vacuna -->
-                    <v-autocomplete
+                    <v-select
                         class="mt-4"
                         v-model="vaccine"
-                        :items="['Vacuna 1', 'Vacuna 2', 'Vacuna 3']"
+                        :items="vacunas"
+                        item-title="vaccineName"
+                        :item-value="'id'"
+                        :loading="loadingVacunas"
                         label="Vacuna"
                         color="text"
                         required
                         :error-messages="vaccineError"
                         prepend-icon="mdi-needle">
-                    </v-autocomplete>
+                    </v-select>
         
                     <!-- Numero del lote -->
                     <v-text-field
@@ -51,7 +54,7 @@
                         class="mt-4"
                         v-model="expirationDate"
                         clearable
-                        label="Fecha de vencimiento del lote "
+                        label="Fecha de vencimiento del lote"
                         type="date"
                         color="text"
                         required
@@ -86,7 +89,12 @@
                     ></v-number-input>
         
                     <div class="d-flex justify-end mt-4">
-                        <v-btn @click="registro()" block color="success">Registrar</v-btn>
+                        <v-btn 
+                        @click="registro()"
+                        :loading="loading"
+                        :disabled="loading" 
+                        block 
+                        color="success">Registrar</v-btn>
                     </div>
                 </v-form>
             </v-col>
@@ -97,44 +105,71 @@
 <script setup>
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
+import { ref, onMounted } from 'vue'
+import axios from '@/services/axios';
+import { useSnackbar } from '@/composables/useSnackbar'
 
-// Propiedad para formulario en pasos (si es necesaria)
-const props = defineProps({
-    multistep: {
-    type: Boolean,
-    default: false
+const $snackbar = useSnackbar()
+const vacunas = ref([]);
+const loading = ref(false)
+const loadingVacunas = ref(false)
+
+// Al cargar el componente se cargan las vacunas
+onMounted(async () => {
+    try {
+    loadingVacunas.value = true;
+    const response = await axios.get('/api/v1/vaccines');
+    vacunas.value = response.data;
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Error inesperado al registrarse';
+        $snackbar.error(`Algo salió mal al cargar las vacunas: ${msg}`);
+    } finally {
+    loadingVacunas.value = false;
     }
-})
-
-const emit = defineEmits(['next'])
+});
 
 // Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        vaccine: yup.string().required('La vacuna es requerida').min(3,"Debe contener minimo 3 letras"),
-        batchNumber: yup.number().typeError('El número de lote debe ser un número válido').required('El número del lote es obligatorio').min(1, "Debe ser al menos 1"),
-        manufactureDate: yup.date().required('La fecha de fabricación es obligatoria').max(new Date(), 'La fecha de fabricación no puede ser futura'),
-        expirationDate: yup.date().required('La fecha de vencimiento es obligatoria').min(new Date(), 'La fecha de vencimiento no puede ser pasada'),
+        batchNumber: yup.string().typeError('El número de lote debe ser un número válido').required('El número del lote es obligatorio').min(1, "Debe ser al menos 1").matches(/^[0-9]+$/, 'Solo pueden ser números'),
+        manufactureDate: yup.date().typeError('Debe ser una fecha valida').required('La fecha de fabricación es obligatoria').max(new Date(), 'La fecha de fabricación no puede ser futura'),
+        expirationDate: yup.date().typeError('Debe ser una fecha valida').required('La fecha de vencimiento es obligatoria').min(new Date(), 'La fecha de vencimiento no puede ser pasada'),
         initialQuantity: yup.number().required('La cantidad inicial es obligatoria').min(1,"Debe ser al menos 1"),
-        availableQuantity: yup.number().required('La cantidad disponible es obligatoria').min(1,"Debe ser al menos 1")
+        availableQuantity: yup.number().required('La cantidad disponible es obligatoria').min(1,"Debe ser al menos 1"),
+        vaccine: yup.string().required('La vacuna es requerida'),
     })
 }); 
 
 // Manejo de errores
-const {value: vaccine, errorMessage: vaccineError} = useField("vaccine")
 const {value: batchNumber, errorMessage: batchNumberError} = useField("batchNumber")
 const {value: manufactureDate, errorMessage: manufactureDateError} = useField("manufactureDate")
 const {value: expirationDate, errorMessage: expirationDateError} = useField("expirationDate")
 const {value: initialQuantity, errorMessage: initialQuantityError} = useField("initialQuantity")
 const {value: availableQuantity, errorMessage: availableQuantityError} = useField("availableQuantity")
+const {value: vaccine, errorMessage: vaccineError} = useField("vaccine")
 
 // Envio
-const registro = handleSubmit((values) => {
-    // Funcionalidad backend
-    console.log('Formulario enviado con los siguientes datos:', values);
-    if (props.multistep) {
-        emit('next')
+const registro = handleSubmit( async (values) => {
+    try {
+        loading.value = true
+
+        await axios.post('/api/v1/vaccine-batches', {
+        batchNumber: values.batchNumber,
+        manufactureDate: values.manufactureDate,
+        expirationDate: values.expirationDate,
+        initialQuantity: values.initialQuantity,
+        availableQuantity: values.availableQuantity,
+        vaccineId: values.vaccine,
+        }
+        );
+
+        $snackbar.success('¡Registro exitoso!');
+
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Error inesperado al registrarse';
+        $snackbar.error(`Algo salió mal al registrar el lote: ${msg}`);
+    } finally {
+        loading.value = false;
     }
 }); 
-
 </script>

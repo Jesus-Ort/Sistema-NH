@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid class="d-flex justify-center align-center" style="min-height: 100vh;">
+    <v-container fluid class="d-flex justify-center align-center">
         <v-row justify="center">
         <v-col cols="12" sm="8" md="6" lg="4">
             <v-form class="pa-4" @submit.prevent="login">
@@ -11,12 +11,12 @@
             <!-- Usuario -->
             <v-text-field
                 class="mt-4"
-                v-model="username"
+                v-model="email"
                 clearable
-                label="Nombre de Usuario"
+                label="Email"
                 required
                 color="text"
-                :error-messages="usernameError"
+                :error-messages="emailError"
                 prepend-icon="mdi-account"
             ></v-text-field>
 
@@ -51,39 +51,98 @@
 <script setup>
 import { useForm, useField } from 'vee-validate'
 import * as yup from 'yup'
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import axios from '@/services/axios';
+import { useSnackbar } from '@/composables/useSnackbar'
+import { useUserStore } from '@/stores/users.js'
 
+const $snackbar = useSnackbar()
+
+const userStore = useUserStore()
 const router = useRouter()
+const route = useRoute()
 const loading = ref(false)
+
+onMounted(() => {
+    if (route.query.reason === 'expired') {
+    // Muestra snackbar de sesión expirada
+    $snackbar.warning('Sesión expirada'); 
+    } else if (route.query.reason === 'invalid') {
+    // Muestra snackbar de token invalido
+    $snackbar.warning('Token inválido');
+    } else if (route.query.reason === 'required') {
+    // Muestra snackbar de necesitas token
+    $snackbar.warning('Necesitas iniciar sesión');
+    }
+});
 
 // Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        username: yup.string().required('El nombre de usuario es requerido').min(3,"Debe contener minimo 3 letras").matches(/^[A-Za-z0-9]+$/,"Solo numeros y letras sin caracteres especiales"),
+        email: yup.string().matches(/^[\w-.]+@(gmail\.com|outlook\.com|yahoo\.com|hotmail\.com)$/, 'Solo se permiten correos de Gmail, Outlook, Yahoo o Hotmail').required('El correo electrónico es requerido'),
         password: yup.string().required('La contraseña es requerida').min(6,"Debe contener minimo 6 letras")
     })
 }); 
 
 // Manejo de errores
-const {value: username, errorMessage: usernameError} = useField("username")
+const {value: email, errorMessage: emailError} = useField("email")
 const {value: password, errorMessage: passwordError} = useField("password")
+
+// Función para reintentar el login
+async function retryLogin(values) {
+    try {
+        loading.value = true
+        const response = await axios.post('/api/v1/auth/login', {
+            email: values.email,
+            password: values.password
+        });
+
+        // Guardar el token 
+        const token = response.data.token;
+        localStorage.setItem('token', token);
+
+        // Guardar el rol del usuario
+        const userRole = response.data.role
+        userStore.setRole(userRole)
+
+        $snackbar.success('Reintento exitoso')
+        router.push('/inicio')
+    } catch (error) {
+        const msg = error.response?.data?.message || 'Falló el login'
+        $snackbar.error(`Algo salió mal al hacer login: ${msg}`, {
+        actions: [ { text: 'Reintentar', onClick:() => retryLogin(values) } ]
+        })
+    }
+}
 
 // Envio
 const login = handleSubmit(async (values) => {
     try {
         loading.value = true
-        console.log('Formulario enviado con los siguientes datos:', values)
+        const response = await axios.post('/api/v1/auth/login', {
+            email: values.email,
+            password: values.password
+        });
 
-        // Simular llamada a API
-        await new Promise(resolve => setTimeout(resolve, 2000))
+        const token = response.data.token;
+        const role = response.data.role
+        
+        // Guardamos en el store
+        userStore.setToken(token)
+        userStore.setRole(role)
 
-        // Redirigir al home
-        router.push('/')
+        $snackbar.success('Login exitoso')
+        // Redirigir al inicio
+        router.push('/inicio');
     } catch (error) {
-        console.error('Error en login:', error)
+        const msg = error.response?.data?.message || 'Falló el login'
+        $snackbar.error(`Algo salió mal al hacer login: ${msg}`, {
+        actions: [ { text: 'Reintentar', onClick:() => retryLogin(values) } ]
+        })
     } finally {
         loading.value = false
     }
 })
+
 </script>
