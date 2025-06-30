@@ -1,7 +1,7 @@
 <template>
     <v-card class="pa-4" :class="props.isDark ? 'chart-dark' : 'chart-light'">
         <v-card-title class="text-h6">
-        Dosis aplicadas por vacuna y fecha
+        Dosis aplicadas por vacuna
         </v-card-title>
         <v-card-text>
         <!-- Canvas para el gráfico -->

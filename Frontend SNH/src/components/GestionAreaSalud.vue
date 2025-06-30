@@ -3,9 +3,9 @@
         <v-row>
         <v-col cols="12">
             <div class="mb-8">
-            <h3 class="mb-4">Gestion de las Areas de Salud:</h3>
-            <p>En esta sección podrás gestionar las Areas de Salud.</p>
-            <p>Podrás ver, editar y eliminar las Areas de Salud</p>
+            <h3 class="mb-4">Gestion de los Centros de Salud:</h3>
+            <p>En esta sección podrás gestionar los Centros de Salud.</p>
+            <p>Podrás ver, editar y eliminar los Centros de Salud</p>
             </div>
             <!-- Campo de búsqueda -->
             <v-text-field
@@ -26,7 +26,7 @@
                 :headers="headers"
                 :items="areasFiltradas"
                 :loading="loading"
-                loading-text="Cargando Areas de Salud..."
+                loading-text="Cargando Centros de Salud..."
                 class="elevation-1"
                 :style="{
                 background: isDark ? '#23272f' : '#eee',
@@ -53,7 +53,7 @@
         <!-- Modal de edición -->
         <v-dialog v-model="modal" max-width="600px">
         <v-card>
-            <v-card-title>Editar Area de Salud</v-card-title>
+            <v-card-title>Editar Centro de Salud</v-card-title>
             <v-card-text>
             <v-form @submit.prevent="validarYGuardar">
                 
@@ -230,7 +230,7 @@ const obtenerAreas = async () => {
             raw: p
         }))
     } catch (err) {
-        const msg = err.response?.data?.message || 'Error al cargar las Areas de Salud'
+        const msg = err.response?.data?.message || 'Error al cargar los Centros de Salud'
         $snackbar.error(`Algo salió mal: ${msg}`)
     } finally {
         loading.value = false
@@ -267,7 +267,7 @@ const guardarCambios = async () => {
         mobilePhone: form.value.mobilePhone,
         }
         await axios.patch(`/api/v1/vaccination-centers/${form.value.id}`, data)
-        $snackbar.success('Area de Salud actualizada correctamente')
+        $snackbar.success('Centro de Salud actualizado correctamente')
         modal.value = false
         obtenerAreas()
     } catch (err) {
@@ -289,7 +289,7 @@ const confirmarEliminacion = async () => {
     try {
         loading.value = true
         await axios.delete(`/api/v1/vaccination-centers/${areaSaludBorrar.value.id}`)
-        $snackbar.success('Area de Salud eliminada correctamente')
+        $snackbar.success('Centro de Salud eliminado correctamente')
         mostrarDialogo.value = false
         obtenerAreas()
     } catch (err) {
@@ -303,8 +303,8 @@ const confirmarEliminacion = async () => {
 // Mensaje del dialogo donde pregunta si quieres borrar el area de salud
 const mensajeDialogo = computed(() => {
     return areaSaludBorrar.value?.centerName
-    ? `¿Deseas eliminar el Area de Salud ${areaSaludBorrar.value.centerName}?`
-    : '¿Deseas eliminar este Area de Salud?'
+    ? `¿Deseas eliminar el Centro de Salud ${areaSaludBorrar.value.centerName}?`
+    : '¿Deseas eliminar este Centro de Salud?'
 })
 
 // Normalizar texto para la tabla
