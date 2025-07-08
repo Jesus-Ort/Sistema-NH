@@ -33,7 +33,7 @@
                     class="mt-4"
                     v-model="representativeId"
                     :items="representantesFiltrados"
-                    item-title="identityDocument"
+                    item-title="label"
                     :item-value="'id'"
                     :loading="loadingRepresentante"
                     :rules="[val => !!val || 'Debe seleccionar una cédula válida']"
@@ -70,6 +70,19 @@
                     :error-messages="lastNameError"
                     prepend-icon="mdi-account-box"
                 />
+
+                <!-- Edad -->
+                <v-number-input 
+                    class="mt-4"
+                    v-model="age"
+                    clearable
+                    label="Edad"
+                    required
+                    color="text"
+                    :error-messages="ageError"
+                    prepend-icon="mdi-account"
+                    control-variant="hidden"
+                ></v-number-input>
 
                 <!-- Fecha de Nacimiento -->
                 <v-text-field
@@ -191,6 +204,11 @@ const { handleSubmit } = useForm({
             .required('El apellido es requerido')
             .min(1, 'Debe contener mínimo 1 letra')
             .matches(/^[a-zA-ZñÑ ]+$/, 'Solo letras y espacios'),
+        age: yup
+            .string()
+            .required('La edad es requerida')
+            .max(3, 'Debe contener máximo 3 números')
+            .matches(/^[0-9]+$/, 'Solo pueden ser números'),
         birthDate: yup
             .date()
             .typeError('Debe ser una fecha correcta')
@@ -230,6 +248,7 @@ const { handleSubmit } = useForm({
 
 const { value: firstName, errorMessage: firstNameError } = useField('firstName');
 const { value: lastName, errorMessage: lastNameError } = useField('lastName');
+const { value: age, errorMessage: ageError } = useField('age');
 const { value: birthDate, errorMessage: birthDateError } = useField('birthDate');
 const { value: address, errorMessage: addressError } = useField('address');
 const { value: phone, errorMessage: phoneError } = useField('phone');
@@ -238,7 +257,12 @@ const { value: nationalID, errorMessage: cedulaError } = useField('nationalID');
 const { value: representativeId, errorMessage: representativeIdError } = useField('representativeId');
 
 const representantesFiltrados = computed(() => {
-    return representantes.value.filter(rep => rep.isChild === false);
+    return representantes.value
+        .filter(rep => rep.isChild === false && rep.isActive)
+        .map(rep => ({
+        ...rep,
+        label: `${rep.firstName} ${rep.lastname} - ${rep.identityDocument}`
+        }));
 });
 
 const registro = handleSubmit(async (values) => {
@@ -252,6 +276,7 @@ const registro = handleSubmit(async (values) => {
         const payload = {
             firstName: values.firstName,
             lastname: values.lastName,
+            age: values.age,
             email: values.email,
             address: values.address,
             mobilePhone: values.phone,

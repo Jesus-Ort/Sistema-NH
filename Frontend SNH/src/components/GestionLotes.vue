@@ -27,6 +27,7 @@
                 :items="lotesFiltrados"
                 :loading="loading"
                 loading-text="Cargando Lotes..."
+                :items-per-page-text="'Ítems por páginas'"
                 class="elevation-1"
                 :style="{
                 background: isDark ? '#23272f' : '#eee',
@@ -47,12 +48,14 @@
 
             <!-- Botones Tabla -->
                 <template #item.acciones="{ item }">
-                <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
-                    <v-icon class="text-white">mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn icon color="error" class="mb-1 mt-1" @click="prepararEliminacion(item)">
-                    <v-icon class="text-white">mdi-delete</v-icon>
-                </v-btn>
+                <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                    <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
+                        <v-icon class="text-white">mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn icon color="error" class="mb-1 mt-1" @click="prepararEliminacion(item)">
+                        <v-icon class="text-white">mdi-delete</v-icon>
+                    </v-btn>
+                </div>
                 </template>
             </v-data-table>
             </div>
@@ -150,6 +153,16 @@
                 <v-spacer />
                 <v-btn text @click="modal = false " :disabled="loading">Cancelar</v-btn>
                 <v-btn color="text" @click="validarYGuardar" :disabled="loading">Guardar</v-btn>
+                <v-btn 
+                    color="text" 
+                    @click="estadoLote" 
+                    :disabled="loading"
+                    >
+                    <v-icon start>
+                        {{ loteAbierto ? 'mdi-lock-open-outline' : 'mdi-lock-outline' }}
+                    </v-icon>
+                    {{ loteAbierto ? 'Cerrar Lote' : 'Abrir Lote' }}
+                </v-btn>
                 </v-card-actions>
             </v-form>
             </v-card-text>
@@ -184,6 +197,7 @@ const loadingVacunas = ref(false)
 const modal = ref(false)
 const mostrarDialogo = ref(false)
 const loteBorrar = ref({})
+const loteAbierto = ref(false)
 const busqueda = ref('')
 const form = ref({
     id: null,
@@ -192,13 +206,14 @@ const form = ref({
     manufactureDate: '',
     expirationDate: '',
     initialQuantity: '',
-    availableQuantity: ''
+    availableQuantity: '',
+    status: 1
 })
 
 const errors = ref({})
 
 const schema = yup.object({
-    batchNumber: yup.string().required('El número del lote es obligatorio').min(1, "Debe ser al menos 1").matches(/^[0-9]+$/, 'Solo pueden ser números'),
+    batchNumber: yup.string().required('El número del lote es obligatorio').min(1, "Debe ser al menos 1").matches(/^[a-zA-Z0-9 _-]+$/, 'Solo pueden ser letras, números y signos ( - _ )'),
     manufactureDate: yup.date().typeError('Debe ser una fecha valida').required('La fecha de fabricación es obligatoria').max(new Date(), 'La fecha de fabricación no puede ser futura'),
     expirationDate: yup.date().typeError('Debe ser una fecha valida').required('La fecha de vencimiento es obligatoria').min(new Date(), 'La fecha de vencimiento no puede ser pasada'),
     initialQuantity: yup.number().required('La cantidad inicial es obligatoria').min(1,"Debe ser al menos 1"),
@@ -243,6 +258,7 @@ const headers = [
     { title: 'Fecha de Vencimiento', value: 'expirationDate', align: 'center' },
     { title: 'Cantidad de viales inicial', value: 'initialQuantity', align: 'center' },
     { title: 'Cantidad de viales disponible', value: 'availableQuantity', align: 'center' },
+    { title: 'Estado', value: 'status', align: 'center' },
     { title: 'Acciones', value: 'acciones', sortable: false, align: 'center' }
 ]
 
@@ -261,6 +277,7 @@ const obtenerLotes = async () => {
             expirationDate: p.expirationDate,
             initialQuantity: p.initialQuantity,
             availableQuantity: p.availableQuantity,
+            status: p.status === 1 ? 'Abierto' : 'Cerrado',
             raw: p
         }))
     } catch (err) {
@@ -313,8 +330,10 @@ const abrirModal = (item) => {
     manufactureDate: raw.manufactureDate,
     expirationDate: raw.expirationDate,
     initialQuantity: raw.initialQuantity,
-    availableQuantity: raw.availableQuantity
+    availableQuantity: raw.availableQuantity,
+    status: raw.status || 1
     }
+    loteAbierto.value = form.value.status === 1
     modal.value = true
     // Carga las vacunas al abrir el modal
     cargarVacunas()
@@ -370,8 +389,27 @@ const confirmarEliminacion = async () => {
 const mensajeDialogo = computed(() => {
     return loteBorrar.value?.batchNumber
     ? `¿Deseas eliminar el Lote ${loteBorrar.value.batchNumber}?`
-    : '¿Deseas eliminar este Fabricante?'
+    : '¿Deseas eliminar este Lote?'
 })
+
+const estadoLote = async () => {
+    try {
+        loading.value = true
+        const nuevoEstado = form.value.status === 1 ? 2 : 1
+
+        await axios.patch(`/api/v1/vaccine-batches/${form.value.id}/status/${nuevoEstado}`)
+
+        form.value.status = nuevoEstado
+        loteAbierto.value = nuevoEstado === 1
+        $snackbar.success('Estado del lote actualizado correctamente')
+        obtenerLotes()
+    } catch (err) {
+        const msg = err.response?.data?.message || 'Error al cambiar el estado del lote'
+        $snackbar.error(`Algo salió mal: ${msg}`)
+    } finally {
+        loading.value = false
+    }
+}
 
 // Normalizar texto para la tabla
 const normalizar = (str) => str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
@@ -384,7 +422,8 @@ const lotesFiltrados = computed(() => {
         normalizar(p.manufactureDate).includes(texto) ||
         normalizar(p.expirationDate).includes(texto) ||
         normalizar(p.initialQuantity).includes(texto) ||
-        normalizar(p.availableQuantity).includes(texto)
+        normalizar(p.availableQuantity).includes(texto) ||
+        normalizar(p.status).includes(texto) 
     )
     })
 </script>
