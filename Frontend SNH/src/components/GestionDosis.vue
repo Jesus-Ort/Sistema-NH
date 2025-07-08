@@ -41,17 +41,19 @@
             >
             <!-- Botones Tabla -->
                 <template #item.acciones="{ item }">
-                <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
-                    <v-icon class="text-white">mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn
-                    icon
-                    color="error"
-                    class="mb-1 mt-1"
-                    @click="prepararEliminacion(item)"
-                >
-                    <v-icon class="text-white">mdi-delete</v-icon>
-                </v-btn>
+                <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                    <v-btn icon color="warning" class="mb-1 mt-1" @click="abrirModal(item)">
+                        <v-icon class="text-white">mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn
+                        icon
+                        color="error"
+                        class="mb-1 mt-1"
+                        @click="prepararEliminacion(item)"
+                    >
+                        <v-icon class="text-white">mdi-delete</v-icon>
+                    </v-btn>
+                </div>     
                 </template>
             </v-data-table>
             </div>

@@ -131,7 +131,7 @@ onMounted(async () => {
 // Validaciones
 const { handleSubmit } = useForm({
     validationSchema: yup.object({
-        batchNumber: yup.string().typeError('El número de lote debe ser un número válido').required('El número del lote es obligatorio').min(1, "Debe ser al menos 1").matches(/^[0-9]+$/, 'Solo pueden ser números'),
+        batchNumber: yup.string().typeError('El número de lote debe ser un número válido').required('El número del lote es obligatorio').min(1, "Debe ser al menos 1").matches(/^[a-zA-Z0-9 _-]+$/, 'Solo pueden ser letras, números y signos ( - _ )'),
         manufactureDate: yup.date().typeError('Debe ser una fecha valida').required('La fecha de fabricación es obligatoria').max(new Date(), 'La fecha de fabricación no puede ser futura'),
         expirationDate: yup.date().typeError('Debe ser una fecha valida').required('La fecha de vencimiento es obligatoria').min(new Date(), 'La fecha de vencimiento no puede ser pasada'),
         initialQuantity: yup.number().required('La cantidad inicial es obligatoria').min(1,"Debe ser al menos 1"),
@@ -160,6 +160,7 @@ const registro = handleSubmit( async (values) => {
         initialQuantity: values.initialQuantity,
         availableQuantity: values.availableQuantity,
         vaccineId: values.vaccine,
+        status: 1 // Estado inicial del lote (1 = Abierto)
         }
         );
 

@@ -22,14 +22,18 @@
             prepend-icon="mdi-hospital-building"
             ></v-select>
 
-            <DosisChart v-if="selectedCenterId" :centerId="selectedCenterId" :is-dark="isDark" />
+            <DosisAplicadaChart v-if="selectedCenterId" :centerId="selectedCenterId" :is-dark="isDark" />
+            <DosisDisponibleChart :is-dark="isDark" />
+
+            
         </v-responsive>
         </v-container>
     </v-container>
 </template>
 
 <script setup>
-import DosisChart from '@/components/DosisChart.vue'
+import DosisAplicadaChart from '@/components/DosisAplicadaChart.vue'
+import DosisDisponibleChart from '@/components/DosisDisponibleChart.vue'
 import { ref, onMounted} from 'vue'
 import axios from '@/services/axios'
 import { useSnackbar } from '@/composables/useSnackbar'

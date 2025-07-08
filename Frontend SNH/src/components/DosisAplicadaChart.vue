@@ -19,7 +19,6 @@ import { ref, onMounted, watch } from 'vue'
 import Chart from 'chart.js/auto'
 import axios from '@/services/axios'
 
-// PROPS: recibe el centerId y el isDark
 const props = defineProps({
     centerId: {
         type: String,
@@ -37,14 +36,12 @@ let chartInstance = null
 const loading = ref(false)
 const error = ref(null)
 
-// Función para obtener el color del theme según isDark
 function getThemeColor() {
     return props.isDark
-        ? '#1B856E' // barras claras en modo oscuro
-        : '#1B856E'   // barras oscuras en modo claro
+        ? '#1B856E' // color para modo oscuro
+        : '#1B856E' // color para modo claro (puedes cambiar)
 }
 
-// Obtiene los datos y arma el gráfico
 async function fetchAndRenderChart() {
     loading.value = true
     error.value = null
@@ -56,26 +53,23 @@ async function fetchAndRenderChart() {
 
         const rawData = response.data.items || []
 
-        // Agrupar datos
-        const dataMap = {}
+        // Agrupar por vacuna y contar total de dosis
+        const vaccineTotals = {}
         rawData.forEach(item => {
-        const date = item.applicationDateTime.split('T')[0]
         const vaccine = item.vaccineBatch.vaccine.vaccineName
-        if (!dataMap[date]) dataMap[date] = {}
-        if (!dataMap[date][vaccine]) dataMap[date][vaccine] = 0
-        dataMap[date][vaccine]++
+        if (!vaccineTotals[vaccine]) vaccineTotals[vaccine] = 0
+        vaccineTotals[vaccine]++
         })
 
-        const labels = Object.keys(dataMap).sort()
-        const vaccineNames = Array.from(new Set(rawData.map(i => i.vaccineBatch.vaccine.vaccineName)))
-
+        const labels = Object.keys(vaccineTotals)
+        const data = labels.map(vaccine => vaccineTotals[vaccine])
         const color = getThemeColor()
 
-        const datasets = vaccineNames.map(vaccine => ({
-        label: vaccine,
+        const datasets = [{
+        label: 'Dosis aplicadas',
         backgroundColor: color,
-        data: labels.map(date => dataMap[date][vaccine] || 0)
-        }))
+        data
+        }]
 
         renderChart(labels, datasets)
     } catch (err) {
@@ -84,9 +78,8 @@ async function fetchAndRenderChart() {
     } finally {
         loading.value = false
     }
-    }
+}
 
-    // Renderiza o actualiza el gráfico
 function renderChart(labels, datasets) {
     if (chartInstance) chartInstance.destroy()
     chartInstance = new Chart(chartCanvas.value, {
@@ -103,19 +96,16 @@ function renderChart(labels, datasets) {
             tooltip: { mode: 'index', intersect: false }
         },
         scales: {
-            x: { stacked: true },
-            y: { stacked: true, beginAtZero: true }
+            x: { stacked: false },
+            y: { beginAtZero: true }
         }
         }
     })
 }
 
-// Montaje y reacción a cambios
 onMounted(fetchAndRenderChart)
 watch(() => props.centerId, fetchAndRenderChart)
-watch(() => props.isDark, fetchAndRenderChart) // para refrescar color si cambia modo
 </script>
-
 <style scoped>
 canvas {
     max-height: 400px;
