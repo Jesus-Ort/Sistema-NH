@@ -150,7 +150,7 @@ onMounted(async () => {
 
         // Asignamos las respuestas a sus refs
         centrosSalud.value = centrosResp.data;
-        lotes.value = lotesResp.data;
+        lotes.value = lotesResp.data.filter(lote => lote.status === 1) // Solo lotes activos;
         pacientes.value = pacientesResp.data;
         usuarios.value = usersResp.data;
 

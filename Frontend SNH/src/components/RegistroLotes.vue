@@ -159,8 +159,7 @@ const registro = handleSubmit( async (values) => {
         expirationDate: values.expirationDate,
         initialQuantity: values.initialQuantity,
         availableQuantity: values.availableQuantity,
-        vaccineId: values.vaccine,
-        status: 1 // Estado inicial del lote (1 = Abierto)
+        vaccineId: values.vaccine
         }
         );
 
