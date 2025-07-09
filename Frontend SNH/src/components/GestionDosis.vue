@@ -282,10 +282,12 @@ const cargarVaccineBatches = async () => {
     try {
         loadingLotes.value = true
         const res = await axios.get('/api/v1/vaccine-batches')
-        vaccineBatches.value = res.data.map(vb => ({
-        id: vb.id,
-        vaccineName: vb.vaccine.vaccineName + ' (Lote ' + vb.batchNumber + ')'
-        }))
+        vaccineBatches.value = res.data
+            .filter(vb => vb.status === 1) // Filtra por status
+            .map(vb => ({
+                id: vb.id,
+                vaccineName: vb.vaccine.vaccineName + ' (Lote ' + vb.batchNumber + ')'
+            }))
     } catch (error) {
         const msg = error.response?.data?.message || 'Error al cargar lotes de vacunas'
         $snackbar.error(`Algo salió mal al cargar lotes: ${msg}`)
