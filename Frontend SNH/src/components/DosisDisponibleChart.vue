@@ -3,7 +3,9 @@
         <v-card-title class="text-h6">Dosis disponibles por lote</v-card-title>
         <!-- Gráfico -->
         <v-card-text>
-        <canvas ref="chartCanvas" height="100"></canvas>
+            <div class="chart-container">
+                <canvas ref="chartCanvas"></canvas>
+            </div>
         </v-card-text>
     </v-card>
 </template>
@@ -54,46 +56,47 @@ async function crearGrafica() {
         const { labels, values } = procesarDatos(res.data)
 
         if (chartInstance) {
-        chartInstance.destroy()
+            chartInstance.destroy()
         }
 
         const color = getThemeColor()
 
         chartInstance = new Chart(chartCanvas.value, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [{
-            label: 'Dosis disponibles',
-            data: values,
-            backgroundColor: color,
-            borderColor: color,
-            borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-            y: {
-                beginAtZero: true,
-                title: {
-                display: true,
-                text: 'Cantidad de dosis'
-                }
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'Dosis disponibles',
+                    data: values,
+                    backgroundColor: color,
+                    borderColor: color,
+                    borderWidth: 1
+                }]
             },
-            x: {
-                title: {
-                display: true,
-                text: 'Lotes'
-                },
-                ticks: {
-                autoSkip: false,
-                maxRotation: 45,
-                minRotation: 0
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // <-- Importante para responsividad
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Cantidad de dosis'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Lotes'
+                        },
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 45,
+                            minRotation: 0
+                        }
+                    }
                 }
             }
-            }
-        }
         })
     } catch (error) {
         console.error('Error al cargar los datos de disponibilidad:', error)
@@ -112,14 +115,22 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.chart-container {
+    width: 100%;
+    min-height: 250px;
+    height: 40vw;
+    max-height: 500px;
+    position: relative;
+}
 canvas {
-    max-width: 100%;
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
 }
 .chart-dark {
-  background-color: #222; /* O el color que uses para fondo oscuro */
+  background-color: #222;
 }
-
 .chart-light {
-  background-color: #ddd; /* O tu fondo claro */
+  background-color: #ddd;
 }
 </style>
