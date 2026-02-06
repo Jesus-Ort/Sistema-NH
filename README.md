@@ -56,6 +56,25 @@ Sistema-NH (Convit) es una aplicación web para la gestión y registro de vacuna
 - [Vee-Validate](https://vee-validate.logaretm.com/)
 - [Yup](https://github.com/jquense/yup)
 
-## Licencia
+## Contribuyendo
 
-Este proyecto es privado y su uso está restringido.
+Este proyecto forma parte de mi proceso de aprendizaje como ingeniero informático y desarrollador web. Es posible que encuentres decisiones de diseño mejorables, errores o implementaciones que aún no siguen las mejores prácticas. Estoy totalmente abierto a sugerencias, críticas constructivas y cualquier aporte que me ayude a mejorar.
+
+Para participar:
+
+- Haz un fork del repositorio y crea una rama para tu funcionalidad o corrección.
+- Abre un Pull Request explicando claramente tus cambios.
+- Si detectas un problema, crea un issue con la mayor cantidad de detalles posible.
+- Toda recomendación sobre arquitectura, seguridad o buenas prácticas es bienvenida.
+
+### Reglas básicas
+
+- Escribe código claro y documentado.
+- Intenta mantener la coherencia con el estilo del proyecto.
+- Explica el porqué de los cambios, no solo el qué.
+
+## Sobre este proyecto
+
+Este sistema nació como un proyecto real para apoyar la gestión de un Fondo de Ayuda Mutua, pero también es mi laboratorio personal de aprendizaje. Cada módulo refleja cosas que voy descubriendo: nuevas formas de estructurar código, manejar bases de datos, diseñar interfaces y construir software útil para personas reales.
+
+Si ves algo que podría hacerse mejor, probablemente tengas razón, y me encantaría aprenderlo.
