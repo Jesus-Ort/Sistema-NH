@@ -75,6 +75,6 @@ Para participar:
 
 ## Sobre este proyecto
 
-Este sistema nació como un proyecto real para apoyar la gestión de un Fondo de Ayuda Mutua, pero también es mi laboratorio personal de aprendizaje. Cada módulo refleja cosas que voy descubriendo: nuevas formas de estructurar código, manejar bases de datos, diseñar interfaces y construir software útil para personas reales.
+Este sistema nació como un proyecto académico real para apoyar la gestión de vacunas en el Centro de Diagnóstico Integral (CDI) Negra Hipólita, ubicado en el municipio Rómulo Gallegos del estado Cojedes, pero también es mi laboratorio personal de aprendizaje. Cada módulo refleja cosas que voy descubriendo: nuevas formas de estructurar código, manejar bases de datos, diseñar interfaces y construir software útil para personas reales.
 
 Si ves algo que podría hacerse mejor, probablemente tengas razón, y me encantaría aprenderlo.
